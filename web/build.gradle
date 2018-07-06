@@ -1,0 +1,37 @@
+apply plugin:"war"
+
+dependencies{
+    // 依赖 core 模块
+    compile project(":core")
+    compile(
+            "org.springframework:spring-webmvc:$springVersion",
+            "org.apache.taglibs:taglibs-standard-impl:1.2.1"
+    )
+    //系统提供的依赖
+    providedCompile(
+            "javax.servlet:javax.servlet-api:3.1.0",
+            "javax.servlet.jsp:jsp-api:2.2.1-b03",
+            "javax.servlet.jsp.jstl:javax.servlet.jsp.jstl-api:1.2.1"
+    )
+}
+
+task jarWithoutResources(type: Jar) {
+    baseName project.name
+    from("$buildDir/classes/main")
+}
+
+war{
+    dependsOn jarWithoutResources
+    from("$projectDir/src/main/resources") {
+        include "*.properties"
+        into("WEB-INF/classes")
+    }
+    classpath=classpath - sourceSets.main.output
+    classpath fileTree(dir:libsDir, include:"${project.name}-${version}.jar")
+}
+task('jarPath')<<{
+    configurations.runtime.resolve().each {
+        print it.toString()+";"
+    }
+    println();
+}
