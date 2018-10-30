@@ -36,13 +36,6 @@
         enable
     </sql>
 
-    <select id="findAll" resultType="user">
-        SELECT
-        <include refid="Base_Column_List"/>
-        FROM
-        sys_user
-    </select>
-
     <select id="findPageList" parameterType="user" resultType="user">
         SELECT
         <include refid="Base_Column_List"/>

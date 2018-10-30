@@ -1,10 +1,11 @@
 package com.songsy.iframe.model;
 
 
+import com.songsy.iframe.core.persistence.provider.annotation.Entity;
+import com.songsy.iframe.core.persistence.provider.annotation.Table;
 import com.songsy.iframe.core.persistence.provider.mapper.BaseEntity;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 
 /**
@@ -12,10 +13,11 @@ import lombok.ToString;
  * @author songshuiyang
  * @date 2017/11/28 21:36
  */
-@Getter
-@Setter
-@ToString
-public class User extends BaseEntity {
+@Data
+@Entity
+@Table(name = "sys_user")
+@EqualsAndHashCode(callSuper = false)
+public class User extends BaseEntity<Integer> {
 
     private String username;
 

@@ -16,7 +16,7 @@ import java.util.Date;
  */
 @Getter
 @Setter
-public class BaseEntity implements Serializable {
+public class BaseEntity<ID> implements Serializable {
 
     private static final long serialVersionUID = -3873745966284869947L;
 
@@ -25,7 +25,7 @@ public class BaseEntity implements Serializable {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.CUSTOM)
-    private String id;
+    private ID id;
     /**
      * 创建人
      */
