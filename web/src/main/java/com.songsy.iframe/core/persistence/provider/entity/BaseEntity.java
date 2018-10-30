@@ -1,4 +1,4 @@
-package com.songsy.iframe.core.persistence.provider.mapper;
+package com.songsy.iframe.core.persistence.provider.entity;
 
 import com.songsy.iframe.core.persistence.provider.annotation.GeneratedValue;
 import com.songsy.iframe.core.persistence.provider.annotation.GenerationType;
@@ -11,6 +11,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
+ * 实体类基类
  * @author songshuiyang
  * @date 2018/10/28 10:13
  */

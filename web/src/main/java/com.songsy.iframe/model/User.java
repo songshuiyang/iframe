@@ -3,7 +3,7 @@ package com.songsy.iframe.model;
 
 import com.songsy.iframe.core.persistence.provider.annotation.Entity;
 import com.songsy.iframe.core.persistence.provider.annotation.Table;
-import com.songsy.iframe.core.persistence.provider.mapper.BaseEntity;
+import com.songsy.iframe.core.persistence.provider.entity.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

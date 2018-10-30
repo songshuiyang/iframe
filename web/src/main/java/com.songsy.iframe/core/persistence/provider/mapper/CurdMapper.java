@@ -11,7 +11,7 @@ import java.util.List;
  * @author songshuiyang
  * @date 2018/10/28 11:22
  */
-public interface CurdMapper<T, ID extends Serializable> extends BaseMapper<T, ID> {
+public interface CurdMapper<T, ID extends Serializable> {
     /**
      * 查询所有数据
      * @return
