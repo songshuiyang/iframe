@@ -14,7 +14,7 @@ public class EntityThreadLocal {
      * 获取当前线程的实体类属性
      * @return
      */
-    public EntityProperty get () {
+    public static EntityProperty get () {
         if (null == threadLocal) {
             initialValue();
         }

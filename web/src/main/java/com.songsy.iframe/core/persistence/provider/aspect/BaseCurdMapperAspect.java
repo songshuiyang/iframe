@@ -1,6 +1,7 @@
 package com.songsy.iframe.core.persistence.provider.aspect;
 
 import com.google.common.collect.Maps;
+import com.songsy.iframe.core.persistence.provider.exception.ParameterizedTypeException;
 import com.songsy.iframe.core.persistence.provider.mapper.BaseCurdMapper;
 import com.songsy.iframe.core.persistence.provider.threadlocal.EntityProperty;
 import com.songsy.iframe.core.persistence.provider.threadlocal.EntityThreadLocal;
@@ -67,6 +68,7 @@ public class BaseCurdMapperAspect {
             Type[] types = parameterizedType.getActualTypeArguments();
             if (types.length != 2) {
                 logger.error("parameterizedType type length error");
+                throw new ParameterizedTypeException(parameterizedType.getTypeName());
             }
             try {
                 entityClass = Class.forName(types[0].getTypeName());
