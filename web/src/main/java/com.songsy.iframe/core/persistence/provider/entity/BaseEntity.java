@@ -22,9 +22,9 @@ public class BaseEntity<ID> implements Serializable {
     private static final long serialVersionUID = -3873745966284869947L;
 
     /**
-     * 自定义主键生成
+     * 主键
      */
-    @Id
+    @Id(type = Integer.class)
     @GeneratedValue(strategy = GenerationType.CUSTOM)
     private ID id;
     /**

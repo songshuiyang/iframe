@@ -71,7 +71,7 @@ public class MybatisTableUtils {
                     tableEntity.setTableName(CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, clazz.getSimpleName()));
                 }
                 // 获取所有的字段
-                List<Field> fieldList = getFields(clazz);
+                List<Field> fieldList = ReflectionUtils.getFields(clazz);
                 for (Field field : fieldList) {
                     Class fieldClass = field.getType();
                     String fieldName = field.getName();
@@ -96,6 +96,7 @@ public class MybatisTableUtils {
                             // 默认为主键由数据库自动生成（主要是自动增长型）
                             idColumnEntity.setGenerationType(GenerationType.IDENTITY);
                         }
+                        tableEntity.setIdColumnEntity(idColumnEntity);
                         // id 属性不保存在List<ColumnEntity> columnEntities 中
                         continue;
                     }
@@ -130,25 +131,5 @@ public class MybatisTableUtils {
         return columnEntity;
     }
 
-    /**
-     * 根据类名获取其所有的属性值
-     *
-     * @param clazz
-     * @return
-     */
-    private static List<Field> getFields(Class clazz) {
-        List<Field> fields = Lists.newArrayList();
-        Class current = clazz;
-        while (!current.getName().equals(Object.class.getName())) {
-            getFields(fields, current);
-            current = current.getSuperclass();
-        }
-        return fields;
-    }
 
-    private static void getFields(List<Field> fields, Class clazz) {
-        for (Field field : clazz.getDeclaredFields()) {
-            fields.add(field);
-        }
-    }
 }

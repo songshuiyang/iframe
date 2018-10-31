@@ -1,11 +1,15 @@
 package com.songsy.iframe.core.persistence.provider.utils;
 
+import com.google.common.collect.Lists;
+import com.songsy.iframe.core.persistence.provider.annotation.Id;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
+import java.util.List;
 
 /**
  * 反射工具类
@@ -265,5 +269,44 @@ public class ReflectionUtils {
             return (RuntimeException) e;
         }
         return new RuntimeException("Unexpected Checked Exception.", e);
+    }
+
+
+    /**
+     * 根据类名获取其所有的属性值
+     *
+     * @param clazz
+     * @return
+     */
+    public static List<Field> getFields(Class clazz) {
+        List<Field> fields = Lists.newArrayList();
+        Class current = clazz;
+        while (!current.getName().equals(Object.class.getName())) {
+            getFields(fields, current);
+            current = current.getSuperclass();
+        }
+        return fields;
+    }
+
+    private static void getFields(List<Field> fields, Class clazz) {
+        for (Field field : clazz.getDeclaredFields()) {
+            fields.add(field);
+        }
+    }
+
+    /**
+     * 获取主键类型
+     * @param clazz
+     * @return
+     */
+    public static Class getPrimarykeyClassType (Class clazz) {
+        List<Field> fieldList = getFields(clazz);
+        for (Field field: fieldList) {
+            Id annotation = field.getAnnotation(Id.class);
+            if (null != annotation) {
+                return annotation.type();
+            }
+        }
+        return null;
     }
 }

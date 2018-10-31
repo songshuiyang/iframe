@@ -1,6 +1,8 @@
 package com.songsy.iframe.service.impl;
 
 
+import com.songsy.iframe.core.persistence.provider.mapper.BaseCurdMapper;
+import com.songsy.iframe.core.persistence.provider.service.AbstractBaseService;
 import com.songsy.iframe.mapper.UserMapper;
 import com.songsy.iframe.model.User;
 import com.songsy.iframe.service.UserService;
@@ -14,10 +16,15 @@ import java.util.List;
  * @date 2018/10/28 10:13
  */
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl extends AbstractBaseService<User, Integer> implements UserService  {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Override
+    public BaseCurdMapper<User, Integer> getRepository() {
+        return userMapper;
+    }
 
     @Override
     public List<User> findAll() {

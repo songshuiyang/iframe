@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 主键生成
+ * 定义主键生成策略
  * @author songshuiyang
  * @date 2018/10/28 10:26
  */

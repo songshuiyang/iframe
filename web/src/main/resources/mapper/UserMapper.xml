@@ -36,7 +36,7 @@
         enable
     </sql>
 
-    <select id="findPageList" parameterType="user" resultType="user">
+    <!--<select id="findPageList" parameterType="user" resultType="user">
         SELECT
         <include refid="Base_Column_List"/>
         FROM
@@ -235,14 +235,14 @@
     </delete>
     <insert id="insert" parameterType="com.songsy.iframe.model.User">
         insert into sys_user (id, username, password,
-      nickname, sex, phone, 
-      email, address, salt, 
-      created_date, last_modified_date, remarks, 
+      nickname, sex, phone,
+      email, address, salt,
+      created_date, last_modified_date, remarks,
       enable)
-    values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
-      #{nickname,jdbcType=VARCHAR}, #{sex,jdbcType=INTEGER}, #{phone,jdbcType=VARCHAR}, 
-      #{email,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{salt,jdbcType=VARCHAR}, 
-      #{createdDate,jdbcType=TIMESTAMP}, #{lastModifiedDate,jdbcType=TIMESTAMP}, #{remarks,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
+      #{nickname,jdbcType=VARCHAR}, #{sex,jdbcType=INTEGER}, #{phone,jdbcType=VARCHAR},
+      #{email,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{salt,jdbcType=VARCHAR},
+      #{createdDate,jdbcType=TIMESTAMP}, #{lastModifiedDate,jdbcType=TIMESTAMP}, #{remarks,jdbcType=VARCHAR},
       #{enable,jdbcType=BIT})
     </insert>
 
@@ -262,5 +262,5 @@
       remarks = #{remarks,jdbcType=VARCHAR},
       enable = #{enable,jdbcType=BIT}
     where id = #{id,jdbcType=INTEGER}
-    </update>
+    </update>-->
 </mapper>

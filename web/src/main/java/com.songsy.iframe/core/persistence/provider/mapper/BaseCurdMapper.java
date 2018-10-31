@@ -1,5 +1,7 @@
 package com.songsy.iframe.core.persistence.provider.mapper;
 
+import com.songsy.iframe.core.persistence.provider.entity.BaseEntity;
+
 import java.io.Serializable;
 
 /**
@@ -9,6 +11,6 @@ import java.io.Serializable;
  * @author songshuiyang
  * @date 2018/10/28 11:31
  */
-public interface BaseCurdMapper <T, ID extends Serializable> extends CurdMapper<T, ID> {
+public interface BaseCurdMapper <T extends BaseEntity, ID extends Serializable> extends CurdMapper<T, ID> {
 
 }
