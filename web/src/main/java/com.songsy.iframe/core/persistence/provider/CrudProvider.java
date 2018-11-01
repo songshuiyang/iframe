@@ -1,17 +1,22 @@
 package com.songsy.iframe.core.persistence.provider;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.songsy.iframe.core.persistence.provider.annotation.Version;
 import com.songsy.iframe.core.persistence.provider.entity.ColumnEntity;
 import com.songsy.iframe.core.persistence.provider.entity.TableEntity;
 import com.songsy.iframe.core.persistence.provider.utils.MybatisTableUtils;
+import com.songsy.iframe.core.persistence.provider.utils.PageUtils;
 import com.songsy.iframe.core.persistence.provider.utils.ReflectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
+import java.text.ParseException;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * 通用增删改查实现方法
@@ -29,6 +34,7 @@ public class CrudProvider {
     public static final String UPDATE_NULL = "updateNull";
     public static final String DELETE_ONE = "deleteOne";
     public static final String LOGIC_DELETE_ONE ="logicDeleteOne";
+    public static final String FIND_AUTO_BY_PAGE = "findAutoByPage";
 
     /**
      * 查询所有数据
@@ -188,4 +194,49 @@ public class CrudProvider {
                 "WHERE " + tableEntity.getIdColumnEntity().getColumnName() + " = #{id}";
         return sql;
     }
+
+    public String findAutoByPage(Page<?> page) throws ParseException {
+        TableEntity tableEntity = MybatisTableUtils.getCurrentTableEntity();
+        Map<String, Object> params = page.getParams();
+        StringBuilder sb = new StringBuilder();
+        Integer tableKey = 0; //别名 key
+        String asTable = tableEntity.getTableName() + tableKey++;
+
+        sb.append("SELECT ");
+        sb.append(PageUtils.getColumns(page, asTable));
+        sb.append(" FROM ");
+        sb.append(tableEntity);
+        sb.append(" ");
+        //添加别名
+        sb.append(asTable);
+        //分析是否 有 join
+        if (!params.isEmpty()) {
+            Map<String, Map<String,Object>> joinTables = Maps.newHashMap();
+            String temp  = PageUtils.getWhere(page.getParams(), asTable , joinTables, tableEntity.getTableName());
+            if(joinTables.isEmpty()){
+                sb.append(" WHERE ");
+                sb.append(temp);
+            }else{
+                Set<String> joinTableNames = joinTables.keySet();
+                for(String joinTableName : joinTableNames){
+                    String asJoinTableName = joinTableName + tableKey++;
+                    sb.append(" LEFT JOIN ");
+                    sb.append(joinTableName); // join 表
+                    sb.append(" "); // join 表
+                    sb.append(asJoinTableName); // 别名
+                    sb.append(" on " + asTable + ".id = " + asJoinTableName + "."
+                            + joinTables.get(joinTableName).get("on"));
+                    sb.append(" WHERE ");
+                    sb.append(temp);
+                    sb.append(" and ");
+                    sb.append(PageUtils.getWhere((Map<String, Object>) joinTables.get(joinTableName).get("params"), asJoinTableName, null, tableEntity.getTableName() ));
+                    page.getParams().putAll((Map<String, Object>) joinTables.get(joinTableName).get("params"));
+                }
+            }
+        }
+        return sb.toString();
+    }
+
+
+
 }

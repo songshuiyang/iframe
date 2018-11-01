@@ -1,6 +1,7 @@
 package com.songsy.iframe.core.persistence.provider.mapper;
 
 import com.songsy.iframe.core.persistence.provider.MybatisProvider;
+import com.songsy.iframe.core.persistence.provider.Page;
 import com.songsy.iframe.core.persistence.provider.entity.BaseEntity;
 import org.apache.ibatis.annotations.DeleteProvider;
 import org.apache.ibatis.annotations.InsertProvider;
@@ -70,4 +71,12 @@ public interface CurdMapper<T extends BaseEntity, ID extends Serializable> {
     @DeleteProvider(type=MybatisProvider.class, method = MybatisProvider.LOGIC_DELETE_ONE)
     int logicDeleteOne (Object id);
 
+
+    /**
+     * 分页查询
+     * @param page
+     * @return
+     */
+    @SelectProvider(type=MybatisProvider.class,method = MybatisProvider.FIND_AUTO_BY_PAGE)
+    List<T> findAutoByPage(Page<T> page);
 }
