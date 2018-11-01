@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author songsy
  * @Date 2018/10/31 16:23
  */
-
 public class MybatisProviderTest {
 
     private static Logger logger = LoggerFactory.getLogger(CrudProvider.class);

@@ -3,14 +3,12 @@ package com.songsy.iframe.core.persistence.provider;
 import com.google.common.collect.Lists;
 import com.songsy.iframe.core.persistence.provider.entity.ColumnEntity;
 import com.songsy.iframe.core.persistence.provider.entity.TableEntity;
-import com.songsy.iframe.core.persistence.provider.threadlocal.EntityThreadLocal;
 import com.songsy.iframe.core.persistence.provider.utils.MybatisTableUtils;
 import com.songsy.iframe.core.persistence.provider.utils.ReflectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -49,7 +47,7 @@ public class CrudProvider {
         sb.append("FROM");
         sb.append(" ").append(tableEntity.getTableName()).append(" ");
         sb.append(" WHERE ").append(tableEntity.getIdColumnEntity().getColumnName()).append("=").append(id);
-        logger.info("findAll sql: {}", sb.toString());
+        logger.debug("findAll sql: {}", sb.toString());
         return sb.toString();
     }
 

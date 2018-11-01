@@ -6,8 +6,7 @@ import com.songsy.iframe.core.persistence.provider.exception.VersionException;
 import com.songsy.iframe.core.persistence.provider.mapper.BaseCurdMapper;
 import com.songsy.iframe.core.persistence.provider.utils.IDGeneratorUtils;
 import com.songsy.iframe.core.persistence.provider.utils.ReflectionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
@@ -21,10 +20,9 @@ import java.util.List;
  * @author songsy
  * @Date 2018/131 17:17
  */
+@Slf4j
 public abstract class AbstractBaseService<T extends BaseEntity, ID extends Serializable> {
-
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
-
+    
     public abstract BaseCurdMapper<T, ID> getRepository();
 
     public List<T> findAll() {
@@ -56,17 +54,12 @@ public abstract class AbstractBaseService<T extends BaseEntity, ID extends Seria
             // 乐观锁自增
             entity.setVersion(entity.getVersion() + 1);
         } else {
-            try {
-                Class clazz = Class.forName(entity.getClass().getName());
-                Class idClass = ReflectionUtils.getPrimarykeyClassType(clazz);
-                // 如果主键是字符类型，则采用32位字符
-                if (idClass.equals(String.class)) {
-                    entity.setId(IDGeneratorUtils.generateID());
-                } else {
-                    // 默认主键由数据库自动生成（主要是自动增长型）
-                }
-            } catch (ClassNotFoundException e) {
-                logger.error("");
+            Class idClass = ReflectionUtils.getPrimarykeyClassType(entity.getClass());
+            // 如果主键是字符类型，则采用32位随机字符作为主键
+            if (idClass.equals(String.class)) {
+                entity.setId(IDGeneratorUtils.generateID());
+            } else {
+                // 默认主键由数据库自动生成（主要是自动增长型）
             }
             insertSelective(entity);
         }
