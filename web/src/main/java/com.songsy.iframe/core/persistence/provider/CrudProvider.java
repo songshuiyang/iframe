@@ -1,6 +1,7 @@
 package com.songsy.iframe.core.persistence.provider;
 
 import com.google.common.collect.Lists;
+import com.songsy.iframe.core.persistence.provider.annotation.Version;
 import com.songsy.iframe.core.persistence.provider.entity.ColumnEntity;
 import com.songsy.iframe.core.persistence.provider.entity.TableEntity;
 import com.songsy.iframe.core.persistence.provider.utils.MybatisTableUtils;
@@ -9,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Field;
 import java.util.List;
 
 /**
@@ -84,6 +86,38 @@ public class CrudProvider {
      * @param entity
      */
     public String  update (Object entity) {
-        return "";
+        TableEntity tableEntity = MybatisTableUtils.getCurrentTableEntity();
+        List<ColumnEntity> columnEntities = tableEntity.getColumnEntities();
+        ColumnEntity versionColumnEntity = null;
+        List<String> updateColumns = Lists.newArrayList();
+        for (ColumnEntity columnEntity : columnEntities) {
+            // 乐观锁处理 更新后version字段加一
+            Field field = columnEntity.getField();
+            Version version = field.getAnnotation(Version.class); {
+                if (version != null) {
+                    versionColumnEntity = columnEntity;
+                    updateColumns.add(columnEntity.getColumnName() + " = " + columnEntity.getFieldName() + " + 1");
+                    continue;
+                }
+            }
+            Object value = ReflectionUtils.getFieldValue(entity, columnEntity.getFieldName());
+            if (value != null) {
+                updateColumns.add(columnEntity.getColumnName() + " = " + "#{" + columnEntity.getFieldName() + "}");
+            }
+        }
+        StringBuilder sb = new StringBuilder("UPDATE ");
+        sb.append(tableEntity.getTableName());
+        sb.append(" SET ");
+        sb.append(StringUtils.join(updateColumns, ","));
+        sb.append(" WHERE ");
+        sb.append(tableEntity.getIdColumnEntity().getColumnName());
+        sb.append(" = ");
+        sb.append("#{" + tableEntity.getIdColumnEntity().getFieldName() + "}");
+        sb.append(" and ");
+        sb.append(versionColumnEntity.getColumnName());
+        sb.append(" = ");
+        sb.append("#{" + versionColumnEntity.getFieldName() + "}");
+        String sql = sb.toString();
+        return sql;
     }
 }

@@ -2,6 +2,8 @@ package com.songsy.iframe.core.persistence.provider.entity;
 
 import lombok.Data;
 
+import java.lang.reflect.Field;
+
 /**
  * @author songshuiyang
  * @date 2018/10/30 22:27
@@ -16,4 +18,9 @@ public class ColumnEntity {
      * 表列名
      */
     private String columnName;
+    /**
+     * field
+     */
+    private Field field;
+
 }

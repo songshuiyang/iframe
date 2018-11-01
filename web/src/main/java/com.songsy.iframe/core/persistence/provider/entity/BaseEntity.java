@@ -51,7 +51,7 @@ public class BaseEntity<ID> implements Serializable {
      * 乐观锁字段
      */
     @Version
-    private Integer version;
+    private Long version;
     /**
      * 逻辑删除标识
      */

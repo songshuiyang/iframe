@@ -51,7 +51,7 @@ public abstract class AbstractBaseService<T extends BaseEntity, ID extends Seria
             insertSelective(entity);
         } else if (!StringUtils.isEmpty(entity.getId())) {
             updateSelective(entity);
-            // 乐观锁自增
+            // 插入数据库之后 实体类乐观锁字段自增
             entity.setVersion(entity.getVersion() + 1);
         } else {
             Class idClass = ReflectionUtils.getPrimarykeyClassType(entity.getClass());
@@ -69,15 +69,14 @@ public abstract class AbstractBaseService<T extends BaseEntity, ID extends Seria
     private void insertSelective(T entity) {
         entity.setCreatedDate(new Date());
         entity.setLastModifiedDate(new Date());
-        entity.setVersion(1);
-        if (null == entity.getCreatedBy()) {
-            // TODO 设置当前登陆人
-            entity.setCreatedBy("");
-        }
-        if (null == entity.getLastModifiedBy()) {
-            // TODO 设置当前登陆人
-            entity.setLastModifiedBy("");
-        }
+        entity.setVersion(new Long(1));
+        // 设置当前登录人
+//        if (null == entity.getCreatedBy()) {
+//            entity.setCreatedBy("");
+//        }
+//        if (null == entity.getLastModifiedBy()) {
+//            entity.setLastModifiedBy("");
+//        }
         getRepository().insert(entity);
     }
 
@@ -86,10 +85,10 @@ public abstract class AbstractBaseService<T extends BaseEntity, ID extends Seria
             throw new VersionException();
         }
         entity.setLastModifiedDate(new Date());
-        if (null == entity.getLastModifiedBy()) {
-            // TODO 设置当前登陆人
-            entity.setLastModifiedBy("");
-        }
+        // 设置当前登录人
+//        if (null == entity.getLastModifiedBy()) {
+//            entity.setLastModifiedBy("");
+//        }
         Integer flag = getRepository().update(entity);
         if (flag == 0) {
             throw new UpdateException();

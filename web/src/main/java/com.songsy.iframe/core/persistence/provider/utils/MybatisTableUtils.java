@@ -1,7 +1,6 @@
 package com.songsy.iframe.core.persistence.provider.utils;
 
 import com.google.common.base.CaseFormat;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.songsy.iframe.core.persistence.provider.CrudProvider;
 import com.songsy.iframe.core.persistence.provider.annotation.*;
@@ -128,6 +127,7 @@ public class MybatisTableUtils {
             columnEntity.setColumnName(CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, fieldName));
         }
         columnEntity.setFieldName(fieldName);
+        columnEntity.setField(field);
         return columnEntity;
     }
 
