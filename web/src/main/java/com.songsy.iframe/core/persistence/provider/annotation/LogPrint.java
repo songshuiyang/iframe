@@ -3,6 +3,7 @@ package com.songsy.iframe.core.persistence.provider.annotation;
 import java.lang.annotation.*;
 
 /**
+ * 日志
  * @author songsy
  * @Date 2018/11/1 11:15
  */

@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 乐观锁注解
+ * 乐观锁 字段注解
  * @author songshuiyang
  * @date 2018/10/28 10:41
  */

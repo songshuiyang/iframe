@@ -6,8 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 主键注解
- *
+ * 主键标识注解
  * @author songshuiyang
  * @date 2018/10/28 10:23
  */

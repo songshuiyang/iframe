@@ -33,6 +33,18 @@ public abstract class AbstractBaseService<T extends BaseEntity, ID extends Seria
         return getRepository().findById(id);
     }
 
+    public int updateNull(T entity) {
+        return getRepository().updateNull(entity);
+    }
+
+    public int deleteOne(ID id) {
+        return getRepository().deleteOne(id);
+    }
+
+    public int logicDeleteOne(ID id) {
+        return getRepository().logicDeleteOne(id);
+    }
+
     /**
      * 通用插入更新方法
      *

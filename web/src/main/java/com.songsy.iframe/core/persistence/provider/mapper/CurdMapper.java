@@ -2,6 +2,7 @@ package com.songsy.iframe.core.persistence.provider.mapper;
 
 import com.songsy.iframe.core.persistence.provider.MybatisProvider;
 import com.songsy.iframe.core.persistence.provider.entity.BaseEntity;
+import org.apache.ibatis.annotations.DeleteProvider;
 import org.apache.ibatis.annotations.InsertProvider;
 import org.apache.ibatis.annotations.SelectProvider;
 import org.apache.ibatis.annotations.UpdateProvider;
@@ -44,5 +45,29 @@ public interface CurdMapper<T extends BaseEntity, ID extends Serializable> {
      */
     @UpdateProvider(type=MybatisProvider.class, method = MybatisProvider.UPDATE)
     int update(T entity);
+
+    /**
+     * 更新记录(null值记录也更新)
+     * @param entity
+     * @return
+     */
+    @UpdateProvider(type=MybatisProvider.class, method = MybatisProvider.UPDATE_NULL)
+    int updateNull(T entity);
+
+    /**
+     * 根据id物理删除记录
+     * @param id
+     * @return
+     */
+    @DeleteProvider(type=MybatisProvider.class, method = MybatisProvider.DELETE_ONE)
+    int deleteOne (Object id);
+
+    /**
+     * 根据id逻辑删除记录
+     * @param id
+     * @return
+     */
+    @DeleteProvider(type=MybatisProvider.class, method = MybatisProvider.LOGIC_DELETE_ONE)
+    int logicDeleteOne (Object id);
 
 }

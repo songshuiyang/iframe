@@ -99,6 +99,10 @@ public class MybatisTableUtils {
                         // id 属性不保存在List<ColumnEntity> columnEntities 中
                         continue;
                     }
+                    // 如果是逻辑删除字段
+                    if (null != field.getAnnotation(Deleted.class)) {
+                        tableEntity.setDeleteColunmEntity(getColumn(field));
+                    }
                     columnEntities.add(getColumn(field));
                 }
             } else {

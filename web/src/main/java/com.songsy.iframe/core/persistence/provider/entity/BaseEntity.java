@@ -1,9 +1,6 @@
 package com.songsy.iframe.core.persistence.provider.entity;
 
-import com.songsy.iframe.core.persistence.provider.annotation.GeneratedValue;
-import com.songsy.iframe.core.persistence.provider.annotation.GenerationType;
-import com.songsy.iframe.core.persistence.provider.annotation.Id;
-import com.songsy.iframe.core.persistence.provider.annotation.Version;
+import com.songsy.iframe.core.persistence.provider.annotation.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -55,6 +52,7 @@ public class BaseEntity<ID> implements Serializable {
     /**
      * 逻辑删除标识
      */
+    @Deleted
     private boolean enable = true;
 
     @Override

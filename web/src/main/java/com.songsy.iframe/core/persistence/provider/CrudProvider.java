@@ -26,6 +26,9 @@ public class CrudProvider {
     public static final String FIND_BY_ID = "findById";
     public static final String INSERT = "insert";
     public static final String UPDATE = "update";
+    public static final String UPDATE_NULL = "updateNull";
+    public static final String DELETE_ONE = "deleteOne";
+    public static final String LOGIC_DELETE_ONE ="logicDeleteOne";
 
     /**
      * 查询所有数据
@@ -83,6 +86,7 @@ public class CrudProvider {
 
     /**
      * 更新记录
+     * 字段属性为null不更新
      * @param entity
      */
     public String  update (Object entity) {
@@ -118,6 +122,70 @@ public class CrudProvider {
         sb.append(" = ");
         sb.append("#{" + versionColumnEntity.getFieldName() + "}");
         String sql = sb.toString();
+        return sql;
+    }
+
+    /**
+     * 更新记录
+     * 字段属性为null 也会更新为null
+     * @param entity
+     */
+    public String  updateNull (Object entity) {
+        TableEntity tableEntity = MybatisTableUtils.getCurrentTableEntity();
+        List<ColumnEntity> columnEntities = tableEntity.getColumnEntities();
+        ColumnEntity versionColumnEntity = null;
+        List<String> updateColumns = Lists.newArrayList();
+        for (ColumnEntity columnEntity : columnEntities) {
+            // 乐观锁处理 更新后version字段加一
+            Field field = columnEntity.getField();
+            Version version = field.getAnnotation(Version.class); {
+                if (version != null) {
+                    versionColumnEntity = columnEntity;
+                    updateColumns.add(columnEntity.getColumnName() + " = " + columnEntity.getFieldName() + " + 1");
+                    continue;
+                }
+            }
+            updateColumns.add(columnEntity.getColumnName() + " = " + "#{" + columnEntity.getFieldName() + "}");
+        }
+        StringBuilder sb = new StringBuilder("UPDATE ");
+        sb.append(tableEntity.getTableName());
+        sb.append(" SET ");
+        sb.append(StringUtils.join(updateColumns, ","));
+        sb.append(" WHERE ");
+        sb.append(tableEntity.getIdColumnEntity().getColumnName());
+        sb.append(" = ");
+        sb.append("#{" + tableEntity.getIdColumnEntity().getFieldName() + "}");
+        sb.append(" and ");
+        sb.append(versionColumnEntity.getColumnName());
+        sb.append(" = ");
+        sb.append("#{" + versionColumnEntity.getFieldName() + "}");
+        String sql = sb.toString();
+        return sql;
+    }
+
+    /**
+     * 根据id物理删除记录
+     * @param id
+     * @return
+     */
+    public String deleteOne(Object id) {
+        TableEntity tableEntity = MybatisTableUtils.getCurrentTableEntity();
+        String sql = "DELETE FROM " + tableEntity.getTableName() + " WHERE " + tableEntity.getIdColumnEntity().getColumnName()
+                + " = #{id}";
+        return sql;
+    }
+
+    /**
+     * 根据id逻辑删除记录
+     * @param id
+     * @return
+     */
+    public String logicDeleteOne(Object id) {
+        TableEntity tableEntity = MybatisTableUtils.getCurrentTableEntity();
+        String sql = "UPDATE " +
+                tableEntity.getTableName() +
+                " SET " + tableEntity.getDeleteColunmEntity().getColumnName() + " = 0 " +
+                "WHERE " + tableEntity.getIdColumnEntity().getColumnName() + " = #{id}";
         return sql;
     }
 }

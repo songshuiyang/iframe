@@ -7,6 +7,7 @@ import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
+ * 标识是否是实体类
  * @author songshuiyang
  * @date 2018/10/28 11:45
  */

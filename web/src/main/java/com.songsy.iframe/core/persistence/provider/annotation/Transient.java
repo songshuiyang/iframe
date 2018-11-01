@@ -22,11 +22,9 @@ import java.lang.annotation.Target;
 import static java.lang.annotation.ElementType.*;
 
 /**
- * Marks a field to be transient for the mapping framework. Thus the property will not be persisted and not further
- * inspected by the mapping framework.
- * 
- * @author Oliver Gierke
- * @author Jon Brisbin
+ * 不需要持久化到数据库的字段加上该注解
+ * @author songshuiyang
+ * @date 2018/10/28 11:45
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(value = { FIELD, METHOD, ANNOTATION_TYPE })

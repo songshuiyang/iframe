@@ -1,6 +1,5 @@
 package com.songsy.iframe.core.persistence.provider.entity;
 
-import com.songsy.iframe.core.persistence.provider.annotation.GenerationType;
 import lombok.Data;
 
 import java.util.List;
@@ -17,9 +16,13 @@ public class TableEntity {
      */
     String tableName;
     /**
-     * 主键
+     * 主键列
      */
     IdColumnEntity idColumnEntity;
+    /**
+     * 逻辑删除标识列
+     */
+    ColumnEntity deleteColunmEntity;
     /**
      * 列属性(除了id)
      */

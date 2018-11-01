@@ -60,4 +60,23 @@ public class UserServiceTest extends BaseTest {
         System.out.println(userService.selectByPrimaryKey(1));
     }
 
+    @Test
+    public void updateNull () {
+        User user = userService.findById(50);
+        User userDb = new User();
+        userDb.setId(user.getId());
+        userDb.setVersion(user.getVersion());
+        userDb.setUsername("测试updateNull");
+        userService.updateNull(userDb);
+    }
+
+    @Test
+    public void deleteOne () {
+        userService.deleteOne(48);
+    }
+
+    @Test
+    public void logicDeleteOne () {
+        userService.logicDeleteOne(49);
+    }
 }

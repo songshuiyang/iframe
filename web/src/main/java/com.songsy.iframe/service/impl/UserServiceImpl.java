@@ -27,11 +27,6 @@ public class UserServiceImpl extends AbstractBaseService<User, Integer> implemen
     }
 
     @Override
-    public List<User> findAll() {
-        return userMapper.findAll();
-    }
-
-    @Override
     public User selectByPrimaryKey(Integer id) {
         return userMapper.selectByPrimaryKey(id);
     }

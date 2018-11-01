@@ -22,11 +22,11 @@ import java.lang.annotation.Target;
 import static java.lang.annotation.ElementType.*;
 
 /**
+ * 逻辑删除注解
  * @author songshuiyang
  * @date 2018/10/28 11:52
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(value = { FIELD, METHOD, ANNOTATION_TYPE })
 public @interface Deleted {
-	
 }
