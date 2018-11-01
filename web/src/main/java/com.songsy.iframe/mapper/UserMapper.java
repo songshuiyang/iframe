@@ -11,5 +11,5 @@ import com.songsy.iframe.model.User;
  * @date 2017/11/28 20:12
  */
 public interface UserMapper extends BaseCurdMapper<User,Integer> {
-
+    User selectByPrimaryKey(Integer id);
 }

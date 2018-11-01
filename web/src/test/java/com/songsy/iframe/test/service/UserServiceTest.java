@@ -29,4 +29,9 @@ public class UserServiceTest extends BaseTest {
         userService.saveSelective(user);
     }
 
+    @Test
+    public void selectByPrimaryKey () {
+        System.out.println(userService.selectByPrimaryKey(1));
+    }
+
 }

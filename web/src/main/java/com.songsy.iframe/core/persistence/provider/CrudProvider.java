@@ -32,7 +32,6 @@ public class CrudProvider {
     public String findAll() {
         TableEntity tableEntity = MybatisTableUtils.getCurrentTableEntity();
         String sql = "SELECT * FROM " +  tableEntity.getTableName();
-        logger.info("findAll sql: {}", sql);
         return sql;
     }
 
@@ -48,7 +47,6 @@ public class CrudProvider {
         sb.append("FROM");
         sb.append(" ").append(tableEntity.getTableName()).append(" ");
         sb.append(" WHERE ").append(tableEntity.getIdColumnEntity().getColumnName()).append("=").append(id);
-        logger.debug("findAll sql: {}", sb.toString());
         return sb.toString();
     }
 

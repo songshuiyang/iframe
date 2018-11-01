@@ -36,6 +36,13 @@
         enable
     </sql>
 
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_user
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+
     <!--<select id="findPageList" parameterType="user" resultType="user">
         SELECT
         <include refid="Base_Column_List"/>
