@@ -29,5 +29,6 @@ dependencies{
 
     compile("com.google.guava:guava:19.0")
     compile("org.apache.commons:commons-lang3:3.4")
+    compile("com.alibaba:fastjson:1.2.46")
 
 }

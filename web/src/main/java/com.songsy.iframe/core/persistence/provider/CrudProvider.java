@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 
 /**
+ * 通用增删改查实现方法
  * @author songshuiyang
  * @date 2018/10/28 11:34
  */
