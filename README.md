@@ -1,5 +1,9 @@
 # iframe
-一个基于Mybtais的通用增删改查功能的工具包，mapper接口只要继承相应的接口，实体类添加几个注解即可面向对象操作数据
+* 一个基于Mybtais的通用增删改查功能的工具包，mapper接口只要继承相应的接口，实体类添加几个注解即可面向对象操作数据
+* iframe 基于`Spring boot, Gradle, mybatis3`实现，代码已通过测试
+
+
+代码： `https://github.com/songshuiyang/iframe`
 
 ### 为什么有这个开发需求：
 * 1、在实际整合了`Mybatis`的项目开发过程中经常会遇到变更数据库字段的情况，如果表结构发生了变化就需要重新修改mapper对应的xml文件，每次修改都要同步更新xml文件。
@@ -20,7 +24,9 @@
 
 ### Mybatis 和 Hibernate 优缺点对比
 > 现在开源项目中持久层框架用到最多的基本就是 MyBatis 和 Hibernate
+
 #### Mybatis
+
 ##### 优点
 * Mybatis入门简单，即学即用，提供了数据库查询的自动对象绑定功能，而且延续了很好的SQL使用经验
 * 可以进行更为细致的SQL优化，可以减少查询字段
@@ -51,7 +57,7 @@
   `remarks` varchar(255) DEFAULT NULL COMMENT '备注',
   `enable` bit(1) DEFAULT b'1' COMMENT '是否启用',
 ```
-* mybatis版本在3.0以上
+* mybatis版本在3.0以上，需要使用其新特性
 #### 使用
 * 实体类继承`BaseEntity.class`类获得公共属性
 ```java
