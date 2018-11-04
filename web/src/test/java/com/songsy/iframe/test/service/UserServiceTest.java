@@ -16,6 +16,11 @@ public class UserServiceTest extends BaseTest {
     UserService userService;
 
     @Test
+    public void findAll () {
+        userService.findAll();
+    }
+
+    @Test
     public void insertUser () {
         User user = new User();
         user.setUsername("songsy");
@@ -53,11 +58,6 @@ public class UserServiceTest extends BaseTest {
         userDb.setVersion(user.getVersion());
         userDb.setUsername("测试乐观锁111");
         userService.saveSelective(userDb);
-    }
-
-    @Test
-    public void selectByPrimaryKey () {
-        System.out.println(userService.selectByPrimaryKey(1));
     }
 
     @Test

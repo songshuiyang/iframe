@@ -86,7 +86,6 @@ public class BaseCurdMapperAspect {
         if (null != entityClass) {
             EntityThreadLocal.set(entityPropertyMap.get(entityClass.getName()));
         }
-
     }
 
     /**

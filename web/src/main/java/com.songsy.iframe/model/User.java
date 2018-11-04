@@ -1,6 +1,7 @@
 package com.songsy.iframe.model;
 
 
+import com.songsy.iframe.core.persistence.provider.annotation.Column;
 import com.songsy.iframe.core.persistence.provider.annotation.Entity;
 import com.songsy.iframe.core.persistence.provider.annotation.Table;
 import com.songsy.iframe.core.persistence.provider.entity.BaseEntity;
@@ -37,5 +38,6 @@ public class User extends BaseEntity<Integer> {
 
     private String salt;
 
+    @Column(name = "head_portrait")
     private String headPortrait;
 }

@@ -47,5 +47,4 @@ public class EntityThreadLocal {
         entityProperty.setIdClass(null);
         threadLocal.set(entityProperty);
     }
-
 }

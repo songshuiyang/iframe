@@ -10,5 +10,4 @@ import com.songsy.iframe.model.User;
  */
 public interface UserService extends BaseService<User, Integer> {
 
-    User selectByPrimaryKey(Integer id);
 }
