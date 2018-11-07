@@ -9,3 +9,28 @@ mybatis:
   type-aliases-package: com.songsy.iframe.model
   #mapper.xml\u6240\u5728\u4F4D\u7F6E
   mapper-locations: classpath:mapper/*.xml
+# 主数据库
+master:
+  datasource:
+    use-jndi: false
+    jndi-name: jdbc/datasource
+    url: jdbc:mysql://111.111.226.158:3306/dc?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true&useSSL=false
+    username: root
+    password: root
+    driver-class: com.mysql.jdbc.Driver
+    initial-size: 0
+    min-idle: 10
+    max-active: 100
+    max-wait: 20000
+slave:
+  datasource:
+    use-jndi: false
+    jndi-name: jdbc/datasource
+    url: jdbc:mysql://127.0.0.1:3306/dc?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true&useSSL=false
+    username: root
+    password: root
+    driver-class: com.mysql.jdbc.Driver
+    initial-size: 0
+    min-idle: 10
+    max-active: 100
+    max-wait: 20000

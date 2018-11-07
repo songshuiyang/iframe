@@ -477,7 +477,7 @@ import com.google.common.collect.Maps;
 import com.songsy.iframe.core.persistence.provider.exception.ParameterizedTypeException;
 import com.songsy.iframe.core.persistence.provider.mapper.BaseCurdMapper;
 import com.songsy.iframe.core.persistence.provider.threadlocal.EntityProperty;
-import com.songsy.iframe.core.persistence.provider.threadlocal.EntityThreadLocal;
+import com.songsy.iframe.core.persistence.provider.threadlocal.EntityThreadLocalHolder;
 import com.songsy.iframe.core.persistence.provider.utils.ReflectionUtils;
 import org.apache.ibatis.binding.MapperProxy;
 import org.aspectj.lang.JoinPoint;

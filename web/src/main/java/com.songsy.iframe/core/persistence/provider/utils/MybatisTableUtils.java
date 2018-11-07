@@ -10,7 +10,7 @@ import com.songsy.iframe.core.persistence.provider.entity.TableEntity;
 import com.songsy.iframe.core.persistence.provider.exception.EntityAnnotationException;
 import com.songsy.iframe.core.persistence.provider.exception.EntityException;
 import com.songsy.iframe.core.persistence.provider.threadlocal.EntityProperty;
-import com.songsy.iframe.core.persistence.provider.threadlocal.EntityThreadLocal;
+import com.songsy.iframe.core.persistence.provider.threadlocal.EntityThreadLocalHolder;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +39,7 @@ public class MybatisTableUtils {
      * @return
      */
     public static TableEntity getCurrentTableEntity() {
-        EntityProperty entityProperty = EntityThreadLocal.get();
+        EntityProperty entityProperty = EntityThreadLocalHolder.get();
         if (entityProperty.getEntityClass().equals(Object.class)) {
             throw new EntityException();
         }

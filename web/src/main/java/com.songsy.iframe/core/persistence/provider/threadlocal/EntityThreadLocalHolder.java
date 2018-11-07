@@ -6,7 +6,7 @@ package com.songsy.iframe.core.persistence.provider.threadlocal;
  * @author songshuiyang
  * @date 2018/10/30 21:27
  */
-public class EntityThreadLocal {
+public class EntityThreadLocalHolder {
 
     private static ThreadLocal<EntityProperty> threadLocal = new ThreadLocal<>();
 
