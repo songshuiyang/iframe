@@ -22,6 +22,7 @@ master:
     min-idle: 10
     max-active: 100
     max-wait: 20000
+# 从数据库
 slave:
   datasource:
     use-jndi: false
