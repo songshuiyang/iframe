@@ -35,11 +35,11 @@ public class DynamicDataSourceAspect {
     public void setDynamicDataSource(JoinPoint point, BindingDataSources bindingDataSources) {
         Object target = point.getTarget();
         Method method = ((MethodSignature) point.getSignature()).getMethod();
-        logger.debug("target - {}", target.getClass().getCanonicalName());
-        logger.debug("method - {}", method.getName());
+        logger.debug("切换数据源:  类名 - {}", target.getClass().getCanonicalName());
+        logger.debug("切换数据源: 方法名 - {}", method.getName());
         String key = bindingDataSources.value();
         DynamicDataSourceHolder.setDataSource(key);
-        logger.debug("allready bind datasource[{}].", DynamicDataSourceHolder.getDataSource());
+        logger.debug("切换数据源：[{}] 数据源切换成功.", DynamicDataSourceHolder.getDataSource());
     }
 
     @After("pointcut()")

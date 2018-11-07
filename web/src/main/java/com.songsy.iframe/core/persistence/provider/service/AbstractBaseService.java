@@ -1,5 +1,6 @@
 package com.songsy.iframe.core.persistence.provider.service;
 
+import com.songsy.iframe.core.persistence.datasource.annotation.BindingDataSources;
 import com.songsy.iframe.core.persistence.provider.entity.BaseEntity;
 import com.songsy.iframe.core.persistence.provider.exception.UpdateException;
 import com.songsy.iframe.core.persistence.provider.exception.VersionException;
@@ -25,6 +26,7 @@ public abstract class AbstractBaseService<T extends BaseEntity, ID extends Seria
     
     public abstract BaseCurdMapper<T, ID> getRepository();
 
+    @BindingDataSources("slave")
     public List<T> findAll() {
         return getRepository().findAll();
     }

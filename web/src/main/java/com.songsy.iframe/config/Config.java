@@ -43,6 +43,7 @@ public class Config implements TransactionManagementConfigurer {
 
     /**
      * 实现接口 TransactionManagementConfigurer 方法，其返回值代表在拥有多个事务管理器的情况下默认使用的事务管理器
+     *
      * @return
      */
     @Override
@@ -50,6 +51,11 @@ public class Config implements TransactionManagementConfigurer {
         return transactionManager();
     }
 
+    /**
+     * 数据源
+     *
+     * @return
+     */
     @Bean(name = "dataSource")
     public DynamicDataSource dataSource() {
         Map<Object, Object> targetDataSources = new HashMap<>();
@@ -62,6 +68,11 @@ public class Config implements TransactionManagementConfigurer {
         return dynamicDataSource;
     }
 
+    /**
+     * 创建事务管理器
+     *
+     * @return
+     */
     @Bean
     public PlatformTransactionManager transactionManager() {
         DataSourceTransactionManager txManager = new DataSourceTransactionManager();
@@ -69,6 +80,12 @@ public class Config implements TransactionManagementConfigurer {
         return txManager;
     }
 
+    /**
+     * 创建数据源
+     *
+     * @param prefix
+     * @return
+     */
     private DataSource createDataSource(String prefix) {
         // 是否使用数据源
         boolean useJndi = env.getProperty(prefix + "." + "datasource.use-jndi", Boolean.class, false);

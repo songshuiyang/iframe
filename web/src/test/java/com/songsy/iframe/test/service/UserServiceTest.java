@@ -15,9 +15,12 @@ public class UserServiceTest extends BaseTest {
     @Autowired
     UserService userService;
 
+    /**
+     * 测试切换数据源
+     */
     @Test
     public void findAll () {
-        userService.findAll();
+        System.out.println(userService.findAll());
     }
 
     @Test
