@@ -22,6 +22,11 @@ public class Page<T> {
     private List<String> columns = Lists.newArrayList();    // 查询出来的参数
     private List<T> rows = new ArrayList<>();               // 记录
 
+    /**
+     * 限制分页长度
+     * limit：0 不限制大小
+     * @param limit
+     */
     public Page(int limit) {
         this.limit = limit;
     }

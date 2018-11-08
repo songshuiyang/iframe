@@ -1,5 +1,6 @@
 package com.songsy.iframe.core.persistence.provider.service;
 
+import com.songsy.iframe.core.persistence.provider.Page;
 import com.songsy.iframe.core.persistence.provider.entity.BaseEntity;
 
 import java.io.Serializable;
@@ -24,4 +25,6 @@ public interface BaseService <T extends BaseEntity, ID extends Serializable>{
     int deleteOne (ID id);
 
     int logicDeleteOne (ID id);
+
+    List<T> findAutoByPage (Page<T> page);
 }

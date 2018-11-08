@@ -1,14 +1,6 @@
 spring:
   application:
     name: iframe
-#  datasource:
-#    url: jdbc:mysql://127.0.0.1:3306/iframe?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true&useSSL=false
-#    username: root
-#    password: root
-#    driver-class-name: com.mysql.jdbc.Driver
-mybatis:
-  type-aliases-package: com.songsy.iframe.model
-  mapper-locations: classpath:mapper/*.xml
 # 主数据库
 master:
   datasource:

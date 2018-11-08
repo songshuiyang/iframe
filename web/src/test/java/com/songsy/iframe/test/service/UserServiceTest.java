@@ -1,9 +1,12 @@
 package com.songsy.iframe.test.service;
 
+import com.songsy.iframe.core.persistence.provider.Page;
 import com.songsy.iframe.model.User;
 import com.songsy.iframe.service.UserService;
 import com.songsy.iframe.test.BaseTest;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -11,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @Date 2018/10/31 18:00
  */
 public class UserServiceTest extends BaseTest {
+
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     UserService userService;
@@ -20,7 +25,7 @@ public class UserServiceTest extends BaseTest {
      */
     @Test
     public void findAll () {
-        System.out.println(userService.findAll());
+        logger.info(userService.findAll().toString());
     }
 
     @Test
@@ -81,5 +86,12 @@ public class UserServiceTest extends BaseTest {
     @Test
     public void logicDeleteOne () {
         userService.logicDeleteOne(49);
+    }
+
+    @Test
+    public void findAutoByPage1 () {
+        Page<User> userPage = new Page<User>(0);
+        userPage.setParams("username","ssy");
+        System.out.println(userService.findAutoByPage(userPage));
     }
 }

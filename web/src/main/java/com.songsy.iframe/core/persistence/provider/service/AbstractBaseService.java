@@ -1,6 +1,7 @@
 package com.songsy.iframe.core.persistence.provider.service;
 
 import com.songsy.iframe.core.persistence.datasource.annotation.BindingDataSources;
+import com.songsy.iframe.core.persistence.provider.Page;
 import com.songsy.iframe.core.persistence.provider.entity.BaseEntity;
 import com.songsy.iframe.core.persistence.provider.exception.UpdateException;
 import com.songsy.iframe.core.persistence.provider.exception.VersionException;
@@ -78,6 +79,10 @@ public abstract class AbstractBaseService<T extends BaseEntity, ID extends Seria
             insertSelective(entity);
         }
         return entity;
+    }
+
+    public   List<T> findAutoByPage (Page<T> page) {
+        return getRepository().findAutoByPage(page);
     }
 
     private void insertSelective(T entity) {

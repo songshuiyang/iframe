@@ -2,12 +2,10 @@ package com.songsy.iframe.core.persistence.provider.utils;
 
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.songsy.iframe.core.persistence.provider.Page;
 import com.songsy.iframe.core.persistence.provider.constant.CommonConstant;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
-import org.springframework.util.Assert;
 
 import java.text.ParseException;
 import java.util.Date;
@@ -30,7 +28,7 @@ public class PageUtils {
         }
     }
 
-    public static String getWhere(Map<String, Object> params, String asTable, Map<String, Map<String, Object>> joinTables, String tableName) throws ParseException {
+    public static String getWhere(Map<String, Object> params, String asTable) throws ParseException {
         List<String> expresses = Lists.newArrayList();
         Set<String> cloneSet = params.keySet().stream().collect(Collectors.toSet());
         for (String key : cloneSet) {
@@ -139,34 +137,6 @@ public class PageUtils {
                         expresses.add("match (" + asTable + "." + getExpressColumn(key) + ") against  (#{params." + key + "})");
                     }
                     break;
-                case "join":
-                    //join_表名对应的实体类_操作_字段
-                    Assert.isTrue(key.split("_").length == 4, "连表格式操作非法");
-                    // table
-                    // on
-                    // params
-                    value = params.get(key).toString();
-                    if (!StringUtils.isBlank(value)) {
-                        String joinTableName = getJoinTable(key);//替换前缀
-                        Map<String, Object> joinTable = Maps.newHashMap();
-                        //初始化对象
-                        if (joinTables.containsKey(joinTableName)) {
-                            joinTable = joinTables.get(joinTableName);
-                        } else {
-                            joinTables.put(joinTableName, joinTable);
-                        }
-
-                        Map<String, Object> joinTableParams = Maps.newHashMap();
-                        if (joinTable.containsKey("params")) {
-                            joinTableParams = (Map<String, Object>) joinTable.get("params");
-                        } else {
-                            joinTable.put("params", joinTableParams);
-                        }
-                        joinTable.put("on", joinTableName);
-
-                        joinTableParams.put(key.split("_")[2] + "_" + key.split("_")[3], value);
-                        params.remove(key);
-                    }
                 default:
                     String[] optAndExpressColumn = key.split("_");
                     if (optAndExpressColumn.length == 1) {
@@ -186,14 +156,6 @@ public class PageUtils {
 
     public static String getExpressColumn(String temp) {
         return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, temp.split("_")[1]);
-    }
-
-    public static String getJoinTable(String temp) {
-        return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, temp.split("_")[1]);
-    }
-
-    public static String getJoinColumn(String tableName) {
-        return tableName.replaceAll("ge", "fd") + "_id";
     }
 
     /**

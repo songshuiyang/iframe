@@ -1,7 +1,6 @@
 package com.songsy.iframe.core.persistence.provider;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.songsy.iframe.core.persistence.provider.annotation.Version;
 import com.songsy.iframe.core.persistence.provider.entity.ColumnEntity;
 import com.songsy.iframe.core.persistence.provider.entity.TableEntity;
@@ -16,10 +15,10 @@ import java.lang.reflect.Field;
 import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * 通用增删改查实现方法
+ *
  * @author songshuiyang
  * @date 2018/10/28 11:34
  */
@@ -33,25 +32,27 @@ public class CrudProvider {
     public static final String UPDATE = "update";
     public static final String UPDATE_NULL = "updateNull";
     public static final String DELETE_ONE = "deleteOne";
-    public static final String LOGIC_DELETE_ONE ="logicDeleteOne";
+    public static final String LOGIC_DELETE_ONE = "logicDeleteOne";
     public static final String FIND_AUTO_BY_PAGE = "findAutoByPage";
 
     /**
      * 查询所有数据
+     *
      * @return
      */
     public String findAll() {
         TableEntity tableEntity = MybatisTableUtils.getCurrentTableEntity();
-        String sql = "SELECT * FROM " +  tableEntity.getTableName();
+        String sql = "SELECT * FROM " + tableEntity.getTableName();
         return sql;
     }
 
     /**
      * 根据id查询记录
+     *
      * @param id
      * @return
      */
-    public String findById (Object id) {
+    public String findById(Object id) {
         TableEntity tableEntity = MybatisTableUtils.getCurrentTableEntity();
         StringBuilder sb = new StringBuilder("SELECT ");
         sb.append(" * ");
@@ -63,9 +64,10 @@ public class CrudProvider {
 
     /**
      * 插入记录
+     *
      * @param entity
      */
-    public String insert (Object entity) {
+    public String insert(Object entity) {
         TableEntity tableEntity = MybatisTableUtils.getCurrentTableEntity();
         List<ColumnEntity> columnEntities = tableEntity.getColumnEntities();
         List<String> fieldNames = Lists.newArrayList();
@@ -93,9 +95,10 @@ public class CrudProvider {
     /**
      * 更新记录
      * 字段属性为null不更新
+     *
      * @param entity
      */
-    public String  update (Object entity) {
+    public String update(Object entity) {
         TableEntity tableEntity = MybatisTableUtils.getCurrentTableEntity();
         List<ColumnEntity> columnEntities = tableEntity.getColumnEntities();
         ColumnEntity versionColumnEntity = null;
@@ -103,7 +106,8 @@ public class CrudProvider {
         for (ColumnEntity columnEntity : columnEntities) {
             // 乐观锁处理 更新后version字段加一
             Field field = columnEntity.getField();
-            Version version = field.getAnnotation(Version.class); {
+            Version version = field.getAnnotation(Version.class);
+            {
                 if (version != null) {
                     versionColumnEntity = columnEntity;
                     updateColumns.add(columnEntity.getColumnName() + " = " + columnEntity.getFieldName() + " + 1");
@@ -134,9 +138,10 @@ public class CrudProvider {
     /**
      * 更新记录
      * 字段属性为null 也会更新为null
+     *
      * @param entity
      */
-    public String  updateNull (Object entity) {
+    public String updateNull(Object entity) {
         TableEntity tableEntity = MybatisTableUtils.getCurrentTableEntity();
         List<ColumnEntity> columnEntities = tableEntity.getColumnEntities();
         ColumnEntity versionColumnEntity = null;
@@ -144,7 +149,8 @@ public class CrudProvider {
         for (ColumnEntity columnEntity : columnEntities) {
             // 乐观锁处理 更新后version字段加一
             Field field = columnEntity.getField();
-            Version version = field.getAnnotation(Version.class); {
+            Version version = field.getAnnotation(Version.class);
+            {
                 if (version != null) {
                     versionColumnEntity = columnEntity;
                     updateColumns.add(columnEntity.getColumnName() + " = " + columnEntity.getFieldName() + " + 1");
@@ -171,6 +177,7 @@ public class CrudProvider {
 
     /**
      * 根据id物理删除记录
+     *
      * @param id
      * @return
      */
@@ -183,6 +190,7 @@ public class CrudProvider {
 
     /**
      * 根据id逻辑删除记录
+     *
      * @param id
      * @return
      */
@@ -195,48 +203,32 @@ public class CrudProvider {
         return sql;
     }
 
+    /**
+     * 通用分页查询方法
+     * @param page
+     * @return
+     * @throws ParseException
+     */
     public String findAutoByPage(Page<?> page) throws ParseException {
         TableEntity tableEntity = MybatisTableUtils.getCurrentTableEntity();
         Map<String, Object> params = page.getParams();
         StringBuilder sb = new StringBuilder();
-        Integer tableKey = 0; //别名 key
+        Integer tableKey = 0;
         String asTable = tableEntity.getTableName() + tableKey++;
 
         sb.append("SELECT ");
         sb.append(PageUtils.getColumns(page, asTable));
         sb.append(" FROM ");
-        sb.append(tableEntity);
+        sb.append(tableEntity.getTableName());
         sb.append(" ");
-        //添加别名
         sb.append(asTable);
-        //分析是否 有 join
+        // 拼装查询条件
         if (!params.isEmpty()) {
-            Map<String, Map<String,Object>> joinTables = Maps.newHashMap();
-            String temp  = PageUtils.getWhere(page.getParams(), asTable , joinTables, tableEntity.getTableName());
-            if(joinTables.isEmpty()){
-                sb.append(" WHERE ");
-                sb.append(temp);
-            }else{
-                Set<String> joinTableNames = joinTables.keySet();
-                for(String joinTableName : joinTableNames){
-                    String asJoinTableName = joinTableName + tableKey++;
-                    sb.append(" LEFT JOIN ");
-                    sb.append(joinTableName); // join 表
-                    sb.append(" "); // join 表
-                    sb.append(asJoinTableName); // 别名
-                    sb.append(" on " + asTable + ".id = " + asJoinTableName + "."
-                            + joinTables.get(joinTableName).get("on"));
-                    sb.append(" WHERE ");
-                    sb.append(temp);
-                    sb.append(" and ");
-                    sb.append(PageUtils.getWhere((Map<String, Object>) joinTables.get(joinTableName).get("params"), asJoinTableName, null, tableEntity.getTableName() ));
-                    page.getParams().putAll((Map<String, Object>) joinTables.get(joinTableName).get("params"));
-                }
-            }
+            String temp = PageUtils.getWhere(page.getParams(), asTable);
+            sb.append(" WHERE ");
+            sb.append(temp);
         }
         return sb.toString();
     }
-
-
 
 }
