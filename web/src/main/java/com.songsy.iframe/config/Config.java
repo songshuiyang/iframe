@@ -29,6 +29,7 @@ import static com.songsy.iframe.core.persistence.datasource.common.DataSouceCons
 import static com.songsy.iframe.core.persistence.datasource.common.DataSouceConstant.MASTER_DATA_SOURCE_PREFIX;
 
 /**
+ * 继承TransactionManagementConfigurer可以自定义事务管理器
  * @author songsy
  * @Date 2018/11/7 17:09
  */
@@ -155,7 +156,6 @@ public class Config implements TransactionManagementConfigurer {
         slf4jLogFilter.setResultSetLogEnabled(false);
         slf4jLogFilter.setResultSetCloseAfterLogEnabled(false);
         slf4jLogFilter.setConnectionLogEnabled(false);
-
         List<Filter> filters = new ArrayList<>();
         filters.add(new StatFilter());
         filters.add(slf4jLogFilter);
