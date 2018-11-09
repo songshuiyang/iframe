@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 绑定数据源
+ * 绑定数据源注解
  * @author songsy
  * @Date 2018/11/7 17:33
  */
