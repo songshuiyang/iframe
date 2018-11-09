@@ -146,8 +146,6 @@ public class PageInterceptor implements Interceptor {
 
     private void setTotalRecord(Page<?> page, MappedStatement mappedStatement, BoundSql boundSql, Connection con) {
         String sql = getCountSql(boundSql.getSql());
-
-
         List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
         BoundSql countBoundSql = new BoundSql(mappedStatement.getConfiguration(), sql, parameterMappings, page);
         ParameterHandler parameterHandler = new DefaultParameterHandler(mappedStatement, page, countBoundSql);
@@ -156,7 +154,6 @@ public class PageInterceptor implements Interceptor {
         ResultSet rs = null;
         try {
             int total = 0;
-
             stmt = con.prepareStatement(sql);
             parameterHandler.setParameters(stmt);
             rs = stmt.executeQuery();
@@ -188,6 +185,12 @@ public class PageInterceptor implements Interceptor {
         }
     }
 
+    /**
+     * 得到排序sql
+     * @param sql
+     * @param page
+     * @return
+     */
     private String getOrderSql(String sql, Page<?> page) {
         if (org.apache.commons.lang3.StringUtils.isNotEmpty(page.getSortName())) {
             StringBuilder pageSql = new StringBuilder(100);
@@ -204,6 +207,12 @@ public class PageInterceptor implements Interceptor {
         }
     }
 
+    /**
+     * 得到mysql 分页语句
+     * @param sql
+     * @param page
+     * @return
+     */
     public StringBuilder getMySQLPageSql(String sql, Page page) {
         StringBuilder pageSql = new StringBuilder(100);
         pageSql.append(sql);
