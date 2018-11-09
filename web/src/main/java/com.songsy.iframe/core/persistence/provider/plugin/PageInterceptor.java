@@ -41,11 +41,22 @@ public class PageInterceptor implements Interceptor {
     // 需要拦截的ID(正则匹配)
     private static final String DEFAULT_PAGE_SQL_ID = ".*Page$";
 
+
+    /**
+     * setProperties方法是用于在Mybatis配置文件中指定一些属性的。
+     * @param properties
+     */
     @Override
     public void setProperties(Properties properties) {
 
     }
 
+    /**
+     * 拦截器用于封装目标对象
+     * 在plugin方法中我们可以决定是否要进行拦截进而决定要返回一个什么样的目标对象
+     * @param o
+     * @return
+     */
     @Override
     public Object plugin(Object o) {
         if (Executor.class.isAssignableFrom(o.getClass())) {
@@ -57,6 +68,7 @@ public class PageInterceptor implements Interceptor {
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
         final Object[] queryArgs = invocation.getArgs();
+        // MappedStatement对象对应Mapper配置文件中的一个select/update/insert/delete节点，主要描述的是一条SQL语句
         final MappedStatement mappedStatement = (MappedStatement) queryArgs[MAPPED_STATEMENT_INDEX];
         final Object parameterObject = queryArgs[PARAMETER_INDEX];
         BoundSql boundSql = mappedStatement.getBoundSql(parameterObject);
@@ -67,19 +79,13 @@ public class PageInterceptor implements Interceptor {
             } else {
                 if (parameterObject instanceof Page<?>) {
                     Page<?> page = (Page<?>) parameterObject;
-                    // 获取数据库连接
-                    Connection con = mappedStatement.getConfiguration().getEnvironment().getDataSource()
-                            .getConnection();
                     // 执行总记录数查询
-                    setTotalRecord(page, mappedStatement, boundSql, con);
-
+                    setTotalRecord(page, mappedStatement, boundSql);
+                    // 拼接排序sql
                     String orderSql = getOrderSql(boundSql.getSql(), page);
+                    // 拼接分页sql
                     String pageSql = getPageSql(orderSql, page);
-
-                    if (logger.isDebugEnabled()) {
-                        logger.debug("page sql : {} ", pageSql);
-                    }
-
+                    logger.debug("page sql :  {} ", pageSql);
                     BoundSql newBoundSql = copyFromBoundSql(mappedStatement, boundSql, pageSql);
                     MappedStatement newMappedStatement = copyFromMappedStatement(mappedStatement,
                             new BoundSqlSqlSource(newBoundSql));
@@ -91,6 +97,13 @@ public class PageInterceptor implements Interceptor {
         return invocation.proceed();
     }
 
+    /**
+     * 得到新的 BoundSql
+     * @param ms
+     * @param boundSql
+     * @param sql
+     * @return
+     */
     public static BoundSql copyFromBoundSql(MappedStatement ms, BoundSql boundSql, String sql) {
         BoundSql newBoundSql = new BoundSql(ms.getConfiguration(), sql, boundSql.getParameterMappings(),
                 boundSql.getParameterObject());
@@ -103,6 +116,12 @@ public class PageInterceptor implements Interceptor {
         return newBoundSql;
     }
 
+    /**
+     * 得到新的 MappedStatement
+     * @param ms
+     * @param newSqlSource
+     * @return
+     */
     private static MappedStatement copyFromMappedStatement(MappedStatement ms, SqlSource newSqlSource) {
         MappedStatement.Builder builder = new MappedStatement.Builder(ms.getConfiguration(), ms.getId(), newSqlSource,
                 ms.getSqlCommandType());
@@ -113,18 +132,10 @@ public class PageInterceptor implements Interceptor {
         builder.keyGenerator(ms.getKeyGenerator());
         String[] keyProperties = ms.getKeyProperties();
         builder.keyProperty(keyProperties == null ? null : keyProperties[0]);
-
-        // setStatementTimeout()
         builder.timeout(ms.getTimeout());
-
-        // setStatementResultMap()
         builder.parameterMap(ms.getParameterMap());
-
-        // setStatementResultMap()
         builder.resultMaps(ms.getResultMaps());
         builder.resultSetType(ms.getResultSetType());
-
-        // setStatementCache()
         builder.cache(ms.getCache());
         builder.flushCacheRequired(ms.isFlushCacheRequired());
         builder.useCache(ms.isUseCache());
@@ -144,12 +155,18 @@ public class PageInterceptor implements Interceptor {
         }
     }
 
-    private void setTotalRecord(Page<?> page, MappedStatement mappedStatement, BoundSql boundSql, Connection con) {
+    /**
+     * 查询数据总数
+     * @param page
+     * @param mappedStatement
+     * @param boundSql
+     */
+    private void setTotalRecord(Page<?> page, MappedStatement mappedStatement, BoundSql boundSql) throws Throwable {
         String sql = getCountSql(boundSql.getSql());
         List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
         BoundSql countBoundSql = new BoundSql(mappedStatement.getConfiguration(), sql, parameterMappings, page);
         ParameterHandler parameterHandler = new DefaultParameterHandler(mappedStatement, page, countBoundSql);
-
+        Connection con = mappedStatement.getConfiguration().getEnvironment().getDataSource().getConnection();
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
@@ -161,7 +178,7 @@ public class PageInterceptor implements Interceptor {
                 total = rs.getInt(1);
             }
             page.setTotal(total);
-            logger.debug("page count sql : {}", sql);
+            logger.debug("page count sql   : {}", sql);
             logger.debug("page count total : {}", total);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -171,11 +188,22 @@ public class PageInterceptor implements Interceptor {
         }
     }
 
+    /**
+     * 得到统计总数sql
+     * @param sql
+     * @return
+     */
     private String getCountSql(String sql) {
         int index = sql.indexOf("from") == -1 ? sql.indexOf("FROM") : sql.indexOf("from");
         return "select count(*) " + sql.substring(index);
     }
 
+    /**
+     * 得到分页sql
+     * @param sql
+     * @param page
+     * @return
+     */
     private String getPageSql(String sql, Page<?> page) {
         if (page != null && page.getLimit() > 0) {
             StringBuilder pageSql = getMySQLPageSql(sql, page);

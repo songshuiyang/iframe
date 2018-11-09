@@ -201,4 +201,18 @@ public class UserAutoByPageTest extends BaseTest {
         logger.info(userService.findAutoByPage(userPage).toString());
     }
 
+    /**
+     * 复杂sql
+     */
+    @Test
+    public void findAutoByPage14 () {
+        Page<User> userPage = new Page<>(0);
+        userPage.setLimit(5);
+        userPage.setPage(2);
+        userPage.setSortName("age");
+        userPage.setSortOrder("ASC");
+        userPage.setParams("NOT_age", 88);
+        logger.info(userService.findAutoByPage(userPage).toString());
+    }
+
 }
