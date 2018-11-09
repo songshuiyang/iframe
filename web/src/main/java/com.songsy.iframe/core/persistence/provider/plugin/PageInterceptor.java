@@ -24,6 +24,9 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Properties;
 
+/**
+ * mybatis拦截器，实现接口分页，拦截Executor接口的query方法
+ */
 @Component
 @Intercepts({ @Signature(type = Executor.class, method = "query", args = { MappedStatement.class, Object.class,
         RowBounds.class, ResultHandler.class }) })
@@ -53,11 +56,9 @@ public class PageInterceptor implements Interceptor {
 
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
-        final Executor executor = (Executor) invocation.getTarget();
         final Object[] queryArgs = invocation.getArgs();
         final MappedStatement mappedStatement = (MappedStatement) queryArgs[MAPPED_STATEMENT_INDEX];
         final Object parameterObject = queryArgs[PARAMETER_INDEX];
-        final RowBounds rowBounds = (RowBounds) queryArgs[ROWBOUNDS_INDEX];
         BoundSql boundSql = mappedStatement.getBoundSql(parameterObject);
 
         if (mappedStatement.getId().matches(DEFAULT_PAGE_SQL_ID)) {
@@ -76,7 +77,7 @@ public class PageInterceptor implements Interceptor {
                     String pageSql = getPageSql(orderSql, page);
 
                     if (logger.isDebugEnabled()) {
-                        logger.debug("page sql : [] ", pageSql);
+                        logger.debug("page sql : {} ", pageSql);
                     }
 
                     BoundSql newBoundSql = copyFromBoundSql(mappedStatement, boundSql, pageSql);
@@ -145,9 +146,7 @@ public class PageInterceptor implements Interceptor {
 
     private void setTotalRecord(Page<?> page, MappedStatement mappedStatement, BoundSql boundSql, Connection con) {
         String sql = getCountSql(boundSql.getSql());
-        if (logger.isDebugEnabled()) {
-            logger.debug("page count sql : [] ", sql);
-        }
+
 
         List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
         BoundSql countBoundSql = new BoundSql(mappedStatement.getConfiguration(), sql, parameterMappings, page);
@@ -164,8 +163,9 @@ public class PageInterceptor implements Interceptor {
             if (rs.next()) {
                 total = rs.getInt(1);
             }
-
             page.setTotal(total);
+            logger.debug("page count sql : {}", sql);
+            logger.debug("page count total : {}", total);
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
