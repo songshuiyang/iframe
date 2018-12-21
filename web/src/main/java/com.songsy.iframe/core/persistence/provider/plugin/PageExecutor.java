@@ -35,6 +35,7 @@ public class PageExecutor implements Executor {
         if (parameter != null && parameter instanceof Page<?>) {
             Page<E> page = (Page<E>) parameter;
             doCache(ms, page, parameter, rowBounds);
+            // 将结果赋值到Page对象的rows属性
             page.setRows(rows);
         }
         return rows;
@@ -46,6 +47,7 @@ public class PageExecutor implements Executor {
         if (parameter != null && parameter instanceof Page<?>) {
             Page<E> page = (Page<E>) parameter;
             doCache(ms, page, parameter, rowBounds);
+            // 将结果赋值到Page对象的rows属性
             page.setRows(rows);
         }
         return rows;

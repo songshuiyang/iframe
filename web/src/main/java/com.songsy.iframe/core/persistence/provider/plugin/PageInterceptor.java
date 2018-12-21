@@ -60,23 +60,32 @@ public class PageInterceptor implements Interceptor {
     @Override
     public Object plugin(Object o) {
         if (Executor.class.isAssignableFrom(o.getClass())) {
+            // 在这里返回新的 PageExecutor，用于装饰原Executor
             return Plugin.wrap(new PageExecutor((Executor) o), this);
         }
         return Plugin.wrap(o, this);
     }
 
+    /**
+     * 在这里完成分页及排序操作得到 新的BoundSql 然后执行查询
+     * @param invocation
+     * @return
+     * @throws Throwable
+     */
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
         final Object[] queryArgs = invocation.getArgs();
         // MappedStatement对象对应Mapper配置文件中的一个select/update/insert/delete节点，主要描述的是一条SQL语句
         final MappedStatement mappedStatement = (MappedStatement) queryArgs[MAPPED_STATEMENT_INDEX];
+        // 获取查询参数
         final Object parameterObject = queryArgs[PARAMETER_INDEX];
         BoundSql boundSql = mappedStatement.getBoundSql(parameterObject);
-
+        // 拦截以Page结尾的查询方法
         if (mappedStatement.getId().matches(DEFAULT_PAGE_SQL_ID)) {
             if (parameterObject == null) {
                 throw new NullPointerException("parameterObject is null!");
             } else {
+                // 如果查询参数是Page对象
                 if (parameterObject instanceof Page<?>) {
                     Page<?> page = (Page<?>) parameterObject;
                     // 执行总记录数查询
