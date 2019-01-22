@@ -9,7 +9,7 @@ public interface RedisLockService {
 
     /**
      * 加锁
-     *
+     * 默认过期时间为5分钟
      * @param lockKey   锁
      * @param requestId 请求标识
      * @return

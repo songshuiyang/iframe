@@ -11,14 +11,24 @@ import java.util.UUID;
  * @author songsy
  * @date 2019/1/22 10:59
  */
+
 public class RedisLockServiceTest extends BaseTest {
 
     @Autowired
     RedisLockService redisLockService;
 
+    private String getRandomUUID () {
+        return UUID.randomUUID().toString().replace("-","");
+    }
+
 
     @Test
     public void redisLockTest() {
-        redisLockService.lock("shop_app_lock_key", UUID.randomUUID().toString());
+        boolean lock1 = redisLockService.lock("shop_app_lock_key", getRandomUUID());
+
+        boolean lock2 = redisLockService.unlock("shop_app_lock_key", "5f62785af3504e9ca371caf9e1051d84");
+
+        boolean lock3 = redisLockService.lock("shop_app_lock_key", getRandomUUID());
+
     }
 }

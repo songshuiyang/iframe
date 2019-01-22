@@ -64,11 +64,24 @@ public class RedisLockServiceImpl implements RedisLockService {
         UNLOCK_LUA = sb.toString();
     }
 
+    /**
+     * 加锁
+     * @param lockKey   锁
+     * @param requestId 请求标识
+     * @return
+     */
     @Override
     public boolean lock(String lockKey, String requestId) {
         return lock(lockKey, requestId, DEFAULT_LOCK_EXPIRE_TIME);
     }
 
+    /**
+     * 加锁
+     * @param lockKey    锁
+     * @param requestId  请求标识
+     * @param expireTime 锁的有效时间(s)
+     * @return
+     */
     @Override
     public boolean lock(String lockKey, String requestId, long expireTime) {
         Assert.isTrue(StringUtils.isNotEmpty(lockKey), "key不能为空");
@@ -77,6 +90,12 @@ public class RedisLockServiceImpl implements RedisLockService {
         return OK.equalsIgnoreCase(result);
     }
 
+    /**
+     * 解锁
+     * @param lockKey   锁
+     * @param requestId 请求标识
+     * @return
+     */
     @Override
     public boolean unlock(String lockKey, String requestId) {
         return redisTemplate.execute(new RedisCallback<Boolean>() {
@@ -84,24 +103,22 @@ public class RedisLockServiceImpl implements RedisLockService {
             public Boolean doInRedis(RedisConnection connection) throws DataAccessException {
                 Object nativeConnection = connection.getNativeConnection();
                 Long result = 0L;
-
                 List<String> keys = new ArrayList<>();
                 keys.add(lockKey);
                 List<String> values = new ArrayList<>();
                 values.add(requestId);
-
                 // 集群模式
                 if (nativeConnection instanceof JedisCluster) {
                     result = (Long) ((JedisCluster) nativeConnection).eval(UNLOCK_LUA, keys, values);
                 }
-
                 // 单机模式
                 if (nativeConnection instanceof Jedis) {
                     result = (Long) ((Jedis) nativeConnection).eval(UNLOCK_LUA, keys, values);
                 }
-
                 if (result == 0) {
-                    log.info("Redis分布式锁，解锁{}失败！解锁时间：{}", lockKey, System.currentTimeMillis());
+                    log.info("<<< Redis锁 {} 解锁失败！lockkey: {}, 处理时间：{}",requestId, lockKey, System.currentTimeMillis());
+                } else {
+                    log.info("<<< Redis锁 {} 解锁成功！lockkey: {}, 处理时间：{}",requestId, lockKey, System.currentTimeMillis());
                 }
                 return result == 1;
             }
@@ -112,19 +129,18 @@ public class RedisLockServiceImpl implements RedisLockService {
      * 重写redisTemplate的set方法
      * <p>
      * 命令 SET resource-name anystring NX EX max-lock-time 是一种在 Redis 中实现锁的简单方法。
-     * <p>
-     * 客户端执行以上的命令：
-     * <p>
-     * 如果服务器返回 OK ，那么这个客户端获得锁。
-     * 如果服务器返回 NIL ，那么客户端获取锁失败，可以在稍后再重试。
      *
-     * @param key     锁的Key
-     * @param value   锁里面的值
-     * @param seconds 过去时间（秒）
+     * NX，意思是SET IF NOT EXIST，即当key不存在时，我们进行set操作；若key已经存在，则不做任何操作
+     * PX，意思是我们要给这个key加一个过期的设置
+     * <p>
+     *
+     * @param lockKey   锁的Key
+     * @param requestId 分布式锁要满足解铃还须系铃人，通过给value赋值为requestId，我们就知道这把锁是哪个请求加的了，在解锁的时候就可以有依据
+     * @param seconds   过期时间（秒）
      * @return
      */
-    private String set(final String key, final String value, final long seconds) {
-        Assert.isTrue(StringUtils.isNotEmpty(key), "key不能为空");
+    private String set(final String lockKey, final String requestId, final long seconds) {
+        Assert.isTrue(StringUtils.isNotEmpty(lockKey), "key不能为空");
         return redisTemplate.execute(new RedisCallback<String>() {
             @Override
             public String doInRedis(RedisConnection connection) throws DataAccessException {
@@ -132,18 +148,19 @@ public class RedisLockServiceImpl implements RedisLockService {
                 String result = null;
                 // 集群模式
                 if (nativeConnection instanceof JedisCluster) {
-                    result = ((JedisCluster) nativeConnection).set(key, value, NX, EX, seconds);
+                    result = ((JedisCluster) nativeConnection).set(lockKey, requestId, NX, EX, seconds);
                 }
                 // 单机模式
                 if (nativeConnection instanceof Jedis) {
-                    result = ((Jedis) nativeConnection).set(key, value, NX, EX, seconds);
+                    result = ((Jedis) nativeConnection).set(lockKey, requestId, NX, EX, seconds);
                 }
-
-                log.info("获取锁{}的时间：{}", key, System.currentTimeMillis());
-
+                if (StringUtils.isBlank(result)) {
+                    log.info(">>> Redis锁 {} 加锁失败！lockkey: {}, 处理时间：{}", requestId, lockKey, System.currentTimeMillis());
+                } else {
+                    log.info(">>> Redis锁 {} 加锁成功！lockkey: {}, 处理时间：{}", requestId, lockKey, System.currentTimeMillis());
+                }
                 return result;
             }
         });
     }
-
 }
