@@ -1,6 +1,9 @@
 spring:
   application:
     name: iframe
+  redis:
+    host: 127.0.0.1
+    port: 6379
 # 主数据库
 master:
   datasource:

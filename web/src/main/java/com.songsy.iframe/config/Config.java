@@ -9,6 +9,7 @@ import com.songsy.iframe.core.persistence.datasource.common.DataSouceConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
@@ -33,6 +34,7 @@ import static com.songsy.iframe.core.persistence.datasource.common.DataSouceCons
  * @author songsy
  * @Date 2018/11/7 17:09
  */
+@EnableCaching
 @Configuration
 @EnableTransactionManagement
 public class Config implements TransactionManagementConfigurer {
