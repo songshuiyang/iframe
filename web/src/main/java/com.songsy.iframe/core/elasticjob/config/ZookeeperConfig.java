@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 @Data
 @Component
-@ConfigurationProperties(prefix = "setting.elastic.zookeeper")
+@ConfigurationProperties(prefix = "setting.elastic-job.zookeeper")
 public class ZookeeperConfig {
 
     /**

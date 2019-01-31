@@ -33,7 +33,7 @@ slave:
     max-active: 100
     max-wait: 20000
 setting:
-  elastic:
+  elastic-job:
     zookeeper:
       serverList: 127.0.0.1:2181 #连接Zookeeper服务器的列表  如: host1:2181,host2:2181
       namespace: iframe
