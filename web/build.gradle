@@ -32,4 +32,8 @@ dependencies{
     compile("org.apache.commons:commons-lang3:3.4")
     compile("com.alibaba:fastjson:1.2.46")
 
+    // Elastic Job依赖
+    compile("com.dangdang:elastic-job-lite-core:2.1.5")
+    compile("com.dangdang:elastic-job-lite-spring:2.1.5")
+
 }
