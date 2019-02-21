@@ -18,12 +18,11 @@ import com.songsy.iframe.core.elasticjob.JobPacket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import java.util.List;
-
-@Service
+// TODO 如要使用需去掉注释
+//@Service
 public class ElasticJobServiceImpl implements ElasticJobService {
 
     private static Logger log = LoggerFactory.getLogger(ElasticJobServiceImpl.class);

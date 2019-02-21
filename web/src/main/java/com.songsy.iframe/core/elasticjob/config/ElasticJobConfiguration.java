@@ -5,14 +5,12 @@ import com.dangdang.ddframe.job.reg.zookeeper.ZookeeperConfiguration;
 import com.dangdang.ddframe.job.reg.zookeeper.ZookeeperRegistryCenter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 
-
-@Configuration
-@EnableConfigurationProperties({ZookeeperConfig.class})
+// TODO 如要使用需去掉注释
+//@Configuration
+//@EnableConfigurationProperties({ZookeeperConfig.class})
 public class ElasticJobConfiguration {
 
     @Autowired
