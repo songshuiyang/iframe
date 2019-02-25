@@ -3,9 +3,7 @@ package com.songsy.iframe.controller;
 import com.songsy.iframe.model.User;
 import com.songsy.iframe.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -20,8 +18,30 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("list")
+    @GetMapping("/list")
     public List<User> findAll() {
         return userService.findAll();
+    }
+
+    @GetMapping("/view")
+    public User view() {
+        return userService.findById(1);
+    }
+
+    @GetMapping("/{id}")
+    public User view(@PathVariable("id") Integer id) {
+        return userService.findById(id);
+    }
+
+    @PostMapping("/")
+    public void updateUser(@RequestBody User user) {
+        User user1 = userService.findById(user.getId());
+        user1.setUsername("update");
+        userService.saveSelective(user1);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteUser(@PathVariable("id") Integer id) {
+        userService.logicDeleteOne(id);
     }
 }
