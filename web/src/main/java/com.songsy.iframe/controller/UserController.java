@@ -15,6 +15,8 @@ import java.util.List;
 @RequestMapping("/pub/account")
 public class UserController {
 
+    private String username;
+
     @Autowired
     private UserService userService;
 
@@ -43,5 +45,9 @@ public class UserController {
     @DeleteMapping("/{id}")
     public void deleteUser(@PathVariable("id") Integer id) {
         userService.logicDeleteOne(id);
+    }
+
+    public String function1 () {
+        return "";
     }
 }
