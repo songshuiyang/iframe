@@ -35,11 +35,12 @@ public class UserController {
         return userService.findById(id);
     }
 
-    @PostMapping("/")
-    public void updateUser(@RequestBody User user) {
+    @PostMapping("")
+    public User updateUser(@RequestBody User user) {
         User user1 = userService.findById(user.getId());
         user1.setUsername("update");
         userService.saveSelective(user1);
+        return user;
     }
 
     @DeleteMapping("/{id}")
