@@ -1,6 +1,7 @@
 package com.songsy.iframe.core.redis.impl;
 
 import com.songsy.iframe.core.redis.RedisLockService;
+import com.songsy.iframe.core.utils.IDGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,6 +63,16 @@ public class RedisLockServiceImpl implements RedisLockService {
         sb.append("    return 0 ");
         sb.append("end ");
         UNLOCK_LUA = sb.toString();
+    }
+
+    /**
+     * 加锁
+     * @param lockKey   锁key
+     * @return
+     */
+    @Override
+    public boolean lock(String lockKey) {
+        return lock(lockKey, IDGenerator.getUUID(), DEFAULT_LOCK_EXPIRE_TIME);
     }
 
     /**

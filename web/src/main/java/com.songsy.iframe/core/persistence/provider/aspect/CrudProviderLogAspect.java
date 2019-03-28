@@ -46,7 +46,7 @@
 //    @Around("pointcut()")
 //    public Object before(ProceedingJoinPoint point) throws Throwable {
 //        System.out.println("123");
-//        String msgInfo = "@aop[" + point.getSignature().getDeclaringTypeName() + "." + point.getSignature().getName() + "]"; // 所在的类.方法
+//        String msgInfo = "@aspect[" + point.getSignature().getDeclaringTypeName() + "." + point.getSignature().getName() + "]"; // 所在的类.方法
 //        String requestStr = getRequestParam(point);
 //        requestStr = parameterHandle(requestStr, 10000);
 //        logger.info(msgInfo + "start.输入参数：" + requestStr);

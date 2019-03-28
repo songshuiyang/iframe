@@ -6,11 +6,18 @@ package com.songsy.iframe.core.redis;
  * @date 2019/1/22 10:43
  */
 public interface RedisLockService {
+    /**
+     * 加锁
+     * 默认过期时间为5分钟
+     * @param lockKey   锁key
+     * @return
+     */
+    boolean lock(String lockKey);
 
     /**
      * 加锁
      * 默认过期时间为5分钟
-     * @param lockKey   锁
+     * @param lockKey   锁key
      * @param requestId 请求标识
      * @return
      */
@@ -19,7 +26,7 @@ public interface RedisLockService {
     /**
      * 加锁
      *
-     * @param lockKey    锁
+     * @param lockKey    锁key
      * @param requestId  请求标识
      * @param expireTime 锁的有效时间(s)
      * @return
@@ -28,7 +35,7 @@ public interface RedisLockService {
 
     /**
      * 解锁
-     * @param lockKey   锁
+     * @param lockKey   锁key
      * @param requestId 请求标识
      * @return
      */
