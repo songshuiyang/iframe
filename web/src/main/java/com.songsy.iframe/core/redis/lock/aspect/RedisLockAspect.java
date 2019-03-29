@@ -2,9 +2,9 @@ package com.songsy.iframe.core.redis.lock.aspect;
 
 
 import com.songsy.iframe.core.redis.RedisLockService;
-import com.songsy.iframe.core.redis.constant.RedisConstant;
 import com.songsy.iframe.core.redis.lock.annotation.RedisLock;
 import com.songsy.iframe.core.utils.IDGenerator;
+import com.songsy.iframe.core.utils.ResponseUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -18,12 +18,7 @@ import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
-import org.springframework.web.context.request.RequestAttributes;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-import redis.clients.jedis.Jedis;
 
-import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 
 import static com.songsy.iframe.core.redis.constant.RedisConstant.REDIS_LOCK_KEY_FREFIX;
@@ -60,11 +55,13 @@ public class RedisLockAspect {
             requestId = IDGenerator.getUUID();
             lockStatus = redisLockService.lock(lockKey, requestId);
         } catch (Exception e) {
-            log.error("redisLockAspect 加锁失败");
+            log.error("redisLockAspect 加锁失败, 直接执行方法",e);
+            return pjp.proceed();
         }
         try {
             if (!lockStatus) {
                 log.error("此方法正在处理中{}",lockKey);
+                return ResponseUtil.error("该方法正在处理中");
             }
             result = pjp.proceed();
         } finally {
