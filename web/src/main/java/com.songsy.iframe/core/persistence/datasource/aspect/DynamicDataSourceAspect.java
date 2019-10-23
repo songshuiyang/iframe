@@ -26,7 +26,7 @@ import java.lang.reflect.Method;
  */
 @Aspect
 @Order(-9999)// 保证该AOP在@Transactional之前执行
-@Component
+//@Component
 public class DynamicDataSourceAspect {
 
     private final static Logger logger = LoggerFactory.getLogger(DynamicDataSourceAspect.class);

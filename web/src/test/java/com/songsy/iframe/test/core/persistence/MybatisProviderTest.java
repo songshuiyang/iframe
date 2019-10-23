@@ -1,7 +1,7 @@
 package com.songsy.iframe.test.core.persistence;
 
 import com.songsy.iframe.core.persistence.provider.CrudProvider;
-import com.songsy.iframe.mapper.UserMapper;
+import com.songsy.iframe.mapper.slave.UserSlaveMapper;
 import com.songsy.iframe.model.User;
 import com.songsy.iframe.test.BaseTest;
 import org.junit.Test;
@@ -18,16 +18,16 @@ public class MybatisProviderTest extends BaseTest {
     private static Logger logger = LoggerFactory.getLogger(CrudProvider.class);
 
     @Autowired
-    UserMapper userMapper;
+    UserSlaveMapper userSlaveMapper;
 
 
     @Test
     public void findAllTest() {
-        userMapper.findAll();
+        userSlaveMapper.findAll();
     }
     @Test
     public void findByIdTest() {
-        User user = userMapper.findById(1);
+        User user = userSlaveMapper.findById(1);
         logger.info(user.toString());
     }
 

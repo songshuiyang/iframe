@@ -4,7 +4,7 @@ package com.songsy.iframe.service.impl;
 import com.songsy.iframe.core.persistence.datasource.annotation.SlaveDataSource;
 import com.songsy.iframe.core.persistence.provider.mapper.BaseCurdMapper;
 import com.songsy.iframe.core.persistence.provider.service.AbstractBaseService;
-import com.songsy.iframe.mapper.UserMapper;
+import com.songsy.iframe.mapper.slave.UserSlaveMapper;
 import com.songsy.iframe.model.User;
 import com.songsy.iframe.service.UserSlaveDataService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,16 +21,16 @@ import org.springframework.stereotype.Service;
 public class UserSlaveServiceImpl extends AbstractBaseService<User, Integer> implements UserSlaveDataService {
 
     @Autowired
-    private UserMapper userMapper;
+    private UserSlaveMapper userSlaveMapper;
 
     @Override
     public BaseCurdMapper<User, Integer> getRepository() {
-        return userMapper;
+        return userSlaveMapper;
     }
 
     @Override
     public void updateSlaveDatabase(User user) {
-        userMapper.insert(user);
+        userSlaveMapper.insert(user);
     }
 
 }

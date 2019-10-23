@@ -1,8 +1,6 @@
 package com.songsy.iframe.service;
 
 
-import com.songsy.iframe.core.persistence.datasource.annotation.MasterDataSource;
-import com.songsy.iframe.core.persistence.datasource.annotation.SlaveDataSource;
 import com.songsy.iframe.core.persistence.provider.service.BaseService;
 import com.songsy.iframe.model.User;
 
@@ -16,11 +14,5 @@ import com.songsy.iframe.model.User;
 public interface UserService extends BaseService<User, Integer> {
 
     void updateAllUser (User user);
-
-    @MasterDataSource
-    void updateMasterDatabase (User user) ;
-
-    @SlaveDataSource
-    void updateSlaveDatabase (User user) ;
 
 }

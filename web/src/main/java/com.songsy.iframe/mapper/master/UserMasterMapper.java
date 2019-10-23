@@ -1,4 +1,4 @@
-package com.songsy.iframe.mapper;
+package com.songsy.iframe.mapper.master;
 
 
 
@@ -10,6 +10,6 @@ import com.songsy.iframe.model.User;
  * @author songshuiyang
  * @date 2017/11/28 20:12
  */
-public interface UserMapper extends BaseCurdMapper<User,Integer> {
+public interface UserMasterMapper extends BaseCurdMapper<User,Integer> {
 
 }

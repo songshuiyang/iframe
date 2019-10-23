@@ -3,7 +3,7 @@ package com.songsy.iframe.service.impl;
 
 import com.songsy.iframe.core.persistence.provider.mapper.BaseCurdMapper;
 import com.songsy.iframe.core.persistence.provider.service.AbstractBaseService;
-import com.songsy.iframe.mapper.UserMapper;
+import com.songsy.iframe.mapper.slave.UserSlaveMapper;
 import com.songsy.iframe.model.User;
 import com.songsy.iframe.service.UserMasterDataService;
 import com.songsy.iframe.service.UserService;
@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserServiceImpl extends AbstractBaseService<User, Integer> implements UserService {
 
     @Autowired
-    private UserMapper userMapper;
+    private UserSlaveMapper userSlaveMapper;
 
     @Autowired
     private UserMasterDataService userMasterService;
@@ -30,24 +30,16 @@ public class UserServiceImpl extends AbstractBaseService<User, Integer> implemen
 
     @Override
     public BaseCurdMapper<User, Integer> getRepository() {
-        return userMapper;
+        return userSlaveMapper;
     }
 
     @Override
+    @Transactional
     public void updateAllUser(User user) {
         userMasterService.updateMasterDatabase(user);
-        // System.out.println();
+        // 会事务回滚
+        System.out.println(1/0);
         userSlaveDataService.updateSlaveDatabase(user);
-    }
-
-    @Override
-    public void updateMasterDatabase(User user) {
-        userMapper.insert(user);
-    }
-
-    @Override
-    public void updateSlaveDatabase(User user) {
-        userMapper.insert(user);
     }
 
 }
