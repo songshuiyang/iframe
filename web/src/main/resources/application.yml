@@ -24,7 +24,7 @@ slave:
   datasource:
     use-jndi: false
     jndi-name: jdbc/datasource
-    url: jdbc:mysql://127.0.0.1:3306/iframe?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true&useSSL=false
+    url: jdbc:mysql://127.0.0.1:3306/iframe1?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true&useSSL=false
     username: root
     password: root
     driver-class: com.mysql.jdbc.Driver

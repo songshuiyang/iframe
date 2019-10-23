@@ -24,12 +24,51 @@ public class UserServiceTest extends BaseTest {
      * 测试切换数据源
      */
     @Test
-    public void findAll () {
+    public void findAll() {
         logger.info(userService.findAll().toString());
     }
 
+    /**
+     * 测试
+     */
     @Test
-    public void insertUser () {
+    public void updateAllUserTest1() {
+        User user = new User();
+//        user.setId(48);
+        user.setUsername("songsy20191023");
+        user.setAddress("广东深圳");
+        user.setAge(88);
+        user.setEmail("1459074711@qq.com");
+        user.setHeadPortrait("头像");
+        user.setNickname("宋某某");
+        user.setPassword("root");
+        user.setSex(1);
+        user.setVersion(new Long(9999));
+        userService.updateMasterDatabase(user);
+        userService.updateSlaveDatabase(user);
+    }
+
+    /**
+     * 测试
+     */
+    @Test
+    public void updateAllUserTest2() {
+        User user = new User();
+//        user.setId(48);
+        user.setUsername("songsy20191023");
+        user.setAddress("广东深圳");
+        user.setAge(88);
+        user.setEmail("1459074711@qq.com");
+        user.setHeadPortrait("头像");
+        user.setNickname("宋某某");
+        user.setPassword("root");
+        user.setSex(1);
+        user.setVersion(new Long(9999));
+        userService.updateAllUser(user);
+    }
+
+    @Test
+    public void insertUser() {
         User user = new User();
         user.setUsername("songsy");
         user.setAddress("广东深圳");
@@ -43,7 +82,7 @@ public class UserServiceTest extends BaseTest {
     }
 
     @Test
-    public void updateUser1 () {
+    public void updateUser1() {
         User user = new User();
         user.setId(48);
         user.setUsername("songsy");
@@ -59,7 +98,7 @@ public class UserServiceTest extends BaseTest {
     }
 
     @Test
-    public void updateUser2 () {
+    public void updateUser2() {
         User user = userService.findAll().get(0);
         User userDb = new User();
         userDb.setId(user.getId());
@@ -69,7 +108,7 @@ public class UserServiceTest extends BaseTest {
     }
 
     @Test
-    public void updateNull () {
+    public void updateNull() {
         User user = userService.findById(50);
         User userDb = new User();
         userDb.setId(user.getId());
@@ -79,19 +118,19 @@ public class UserServiceTest extends BaseTest {
     }
 
     @Test
-    public void deleteOne () {
+    public void deleteOne() {
         userService.deleteOne(48);
     }
 
     @Test
-    public void logicDeleteOne () {
+    public void logicDeleteOne() {
         userService.logicDeleteOne(49);
     }
 
     @Test
-    public void findAutoByPage1 () {
+    public void findAutoByPage1() {
         Page<User> userPage = new Page<User>(0);
-        userPage.setParams("username","ssy");
+        userPage.setParams("username", "ssy");
         System.out.println(userService.findAutoByPage(userPage));
     }
 }
