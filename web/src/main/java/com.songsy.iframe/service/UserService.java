@@ -1,7 +1,6 @@
 package com.songsy.iframe.service;
 
 
-import com.songsy.iframe.core.persistence.provider.service.BaseService;
 import com.songsy.iframe.model.User;
 
 /**
@@ -9,7 +8,7 @@ import com.songsy.iframe.model.User;
  * @date 2018/10/28 10:13
  */
 
-public interface UserService extends BaseService<User, Integer> {
+public interface UserService {
 
     void updateAllUser (User user);
 
