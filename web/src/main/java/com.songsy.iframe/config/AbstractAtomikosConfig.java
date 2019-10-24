@@ -3,81 +3,26 @@ package com.songsy.iframe.config;
 import com.alibaba.druid.filter.Filter;
 import com.alibaba.druid.filter.logging.Slf4jLogFilter;
 import com.alibaba.druid.filter.stat.StatFilter;
-import com.alibaba.druid.pool.DruidDataSource;
-import com.songsy.iframe.core.persistence.datasource.DynamicDataSource;
+import com.alibaba.druid.pool.xa.DruidXADataSource;
 import com.songsy.iframe.core.persistence.datasource.common.DataSouceConstant;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.annotation.TransactionManagementConfigurer;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
-import javax.sql.DataSource;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import static com.songsy.iframe.core.persistence.datasource.common.DataSouceConstant.DATA_SOURCE_PREFIX;
-import static com.songsy.iframe.core.persistence.datasource.common.DataSouceConstant.MASTER_DATA_SOURCE_PREFIX;
 
 /**
- * 继承TransactionManagementConfigurer可以自定义事务管理器
  * @author songsy
- * @Date 2018/11/7 17:09
+ * @date 2019/10/24 10:31
  */
-//@Configuration
-//@EnableTransactionManagement
-public class Config implements TransactionManagementConfigurer {
-
-    private static final Logger logger = LoggerFactory.getLogger(Config.class);
+@Slf4j
+public abstract class AbstractAtomikosConfig {
 
     @Autowired
     private Environment env;
-
-    /**
-     * 实现接口 TransactionManagementConfigurer 方法，其返回值代表在拥有多个事务管理器的情况下默认使用的事务管理器
-     *
-     * @return
-     */
-    @Override
-    public PlatformTransactionManager annotationDrivenTransactionManager() {
-        return transactionManager();
-    }
-
-    /**
-     * 数据源
-     *
-     * @return
-     */
-    @Bean(name = "dataSource")
-    public DynamicDataSource dataSource() {
-        Map<Object, Object> targetDataSources = new HashMap<>();
-        for (String prefix : DATA_SOURCE_PREFIX) {
-            targetDataSources.put(prefix, createDataSource(prefix));
-        }
-        DynamicDataSource dynamicDataSource = new DynamicDataSource();
-        dynamicDataSource.setTargetDataSources(targetDataSources);
-        dynamicDataSource.setDefaultTargetDataSource(targetDataSources.get(MASTER_DATA_SOURCE_PREFIX));
-        return dynamicDataSource;
-    }
-
-    /**
-     * 创建事务管理器
-     *
-     * @return
-     */
-    @Bean
-    public PlatformTransactionManager transactionManager() {
-        DataSourceTransactionManager txManager = new DataSourceTransactionManager();
-        txManager.setDataSource(dataSource());
-        return txManager;
-    }
 
     /**
      * 创建数据源
@@ -85,7 +30,7 @@ public class Config implements TransactionManagementConfigurer {
      * @param prefix
      * @return
      */
-    private DataSource createDataSource(String prefix) {
+    protected DruidXADataSource createXaDataSource(String prefix) {
         // 是否使用数据源
         boolean useJndi = env.getProperty(prefix + "." + "datasource.use-jndi", Boolean.class, false);
         // 数据源名称
@@ -109,25 +54,24 @@ public class Config implements TransactionManagementConfigurer {
                 DataSouceConstant.DEFAULT_DATASOURCE_MAX_WAIT);
         if (useJndi) {
             try {
-                logger.debug("get datasource from jndi - [{}].", jndiName);
+                log.debug("get datasource from jndi - [{}].", jndiName);
                 Context context = new InitialContext();
-                DataSource dataSource = (DataSource) context.lookup(jndiName);
+                DruidXADataSource dataSource = (DruidXADataSource) context.lookup(jndiName);
                 return dataSource;
             } catch (Exception e) {
-                logger.error(e.getMessage(), e);
+                log.error(e.getMessage(), e);
             }
         } else {
-            logger.debug("create druid datasource.");
-            logger.debug("url - {}.", url);
-            logger.debug("username - {}.", username);
-            logger.debug("password - {}.", password);
-            logger.debug("driverClass - {}.", driverClass);
-            logger.debug("initialSize - {}.", initialSize);
-            logger.debug("maxActive - {}.", maxActive);
-            logger.debug("minIdle - {}.", minIdle);
-
+            log.debug("create druid datasource.");
+            log.debug("url - {}.", url);
+            log.debug("username - {}.", username);
+            log.debug("password - {}.", password);
+            log.debug("driverClass - {}.", driverClass);
+            log.debug("initialSize - {}.", initialSize);
+            log.debug("maxActive - {}.", maxActive);
+            log.debug("minIdle - {}.", minIdle);
             try {
-                DruidDataSource datasource = new DruidDataSource();
+                DruidXADataSource datasource = new DruidXADataSource();
                 datasource.setUrl(url);
                 datasource.setDriverClassName(driverClass);
                 datasource.setUsername(username);

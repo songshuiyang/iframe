@@ -44,8 +44,8 @@ public class UserServiceTest extends BaseTest {
         user.setPassword("root");
         user.setSex(1);
         user.setVersion(new Long(9999));
-        userService.updateMasterDatabase(user);
-        userService.updateSlaveDatabase(user);
+//        userService.updateMasterDatabase(user);
+//        userService.updateSlaveDatabase(user);
     }
 
     /**

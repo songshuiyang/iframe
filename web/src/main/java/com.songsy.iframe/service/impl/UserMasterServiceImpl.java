@@ -11,8 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * 在类上加切换数据源注解
- *
  * @author songshuiyang
  * @date 2018/10/28 10:13
  */
